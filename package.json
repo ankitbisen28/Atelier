@@ -1,0 +1,18 @@
+{
+  "name": "Atelier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ankit Bisen <ankitbisen288@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run dev\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
