@@ -1,9 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useSignOut } from "react-auth-kit";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useSignIn } from "react-auth-kit";
-import { useAuthHeader } from "react-auth-kit";
 
 export const UserContext = createContext(null);
 
@@ -15,24 +12,20 @@ export const UserContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("userDetails")) || []
   );
   const [profile, setProfile] = useState("");
-  const singOut = useSignOut();
   const navigate = useNavigate();
-  const signIn = useSignIn();
 
-  // auth header from react-auth-kit
-  const authHeader = useAuthHeader();
+  // console.log(userDetails);
+  const token = localStorage.getItem("token");
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: authHeader(),
+    Authorization: `bearer ${token}`,
   };
 
   const HeaderTypeTwo = {
     "Content-Type": "multipart/form-data",
-    Authorization: authHeader(),
+    Authorization: `bearer ${token}`,
   };
-
-  // console.log(userDetails);
 
   const UserImage = async () => {
     try {
@@ -52,7 +45,7 @@ export const UserContextProvider = ({ children }) => {
 
   const fetchUserDetails = async () => {
     try {
-      if (authHeader()) {
+      if (token) {
         const response = await axios.get("/api/user/profiles", {
           headers: headers,
         });
@@ -68,66 +61,29 @@ export const UserContextProvider = ({ children }) => {
     fetchUserDetails();
     // UserImage();
     // eslint-disable-next-line
-  }, [authHeader()]);
+  }, [token, userDetails]);
 
   useEffect(() => {
     UserImage();
     // eslint-disable-next-line
-  }, [userDetails]);
-
-  const login = async () => {
-    try {
-      const response = await axios.post("/api/login", { email, password });
-      // user get login with the help of react aut kit.
-      signIn({
-        token: response.data.token,
-        expiresIn: 3600,
-        tokenType: "Bearer",
-        authState: { email: response.data.email },
-      });
-      navigate("/");
-    } catch (error) {
-      alert("please enter right details");
-      console.error(error);
-    }
-  };
-
-  const register = async () => {
-    try {
-      const response = await axios.post("/api/register", { email, password });
-      signIn({
-        token: response.data.token,
-        expiresIn: 3600,
-        tokenType: "Bearer",
-        authState: { email: response.data.email },
-      });
-      // Redirect user to HomePage
-      navigate("/userDetail");
-    } catch (error) {
-      alert("please enter right details");
-      console.error(error);
-    }
-  };
+  }, [profile]);
 
   const logout = () => {
-    singOut();
+    localStorage.removeItem("token");
     navigate("/login");
     localStorage.removeItem("userDetails");
   };
 
   const value = {
     logout,
-    login,
     setEmail,
     setPassword,
     email,
     password,
     confirmPassword,
     setConfirmPassword,
-    register,
     headers,
     userDetails,
-    authHeader,
     profile,
     HeaderTypeTwo,
   };

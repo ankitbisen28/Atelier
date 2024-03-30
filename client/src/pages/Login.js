@@ -4,11 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
-import { useSignIn } from "react-auth-kit";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const signIn = useSignIn();
 
   const initialValues = {
     email: "",
@@ -25,19 +23,12 @@ export const Login = () => {
       validationSchema: loginSchema,
       onSubmit: async (values, action) => {
         try {
-          const response = await axios.post("/api/login", values);
-          // user get login with the help of react aut kit.
-          signIn({
-            token: response.data.token,
-            expiresIn: 3600,
-            tokenType: "Bearer",
-            authState: { email: response.data.email },
-          });
+          const response = await axios.post('/api/login', values);
+          const token = response.data.token; // Assuming the server returns a token upon successful login
+          localStorage.setItem('token', token);
           navigate("/");
-          action.resetForm();
         } catch (error) {
-          alert("please enter right details");
-          console.error(error);
+          console.error('Login failed:', error);
         }
       },
     });

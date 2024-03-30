@@ -6,9 +6,10 @@
  */
 
 import Env from '@ioc:Adonis/Core/Env'
+import { OrmConfig } from '@ioc:Adonis/Lucid/Orm'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
-const databaseConfig: DatabaseConfig = {
+const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
   /*
   |--------------------------------------------------------------------------
   | Connection
@@ -24,32 +25,44 @@ const databaseConfig: DatabaseConfig = {
   connections: {
     /*
     |--------------------------------------------------------------------------
-    | MySQL config
+    | PostgreSQL config
     |--------------------------------------------------------------------------
     |
-    | Configuration for MySQL database. Make sure to install the driver
+    | Configuration for PostgreSQL database. Make sure to install the driver
     | from npm when using this connection
     |
-    | npm i mysql2
+    | npm i pg
     |
     */
-    mysql: {
-      client: 'mysql2',
+    pg: {
+      client: 'pg',
       connection: {
-        host: Env.get('MYSQL_HOST'),
-        port: Env.get('MYSQL_PORT'),
-        user: Env.get('MYSQL_USER'),
-        password: Env.get('MYSQL_PASSWORD', ''),
-        database: Env.get('MYSQL_DB_NAME'),
-      },
-      migrations: {
-        naturalSort: true,
+        host: Env.get('PG_HOST'),
+        port: Env.get('PG_PORT'),
+        user: Env.get('PG_USER'),
+        password: Env.get('PG_PASSWORD', ''),
+        database: Env.get('PG_DB_NAME'),
       },
       healthCheck: false,
-      debug: false,
+			debug: false,
     },
 
-  }
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | ORM Configuration
+  |--------------------------------------------------------------------------
+  |
+  | Following are some of the configuration options to tweak the conventional
+  | settings of the ORM. For example:
+  |
+  | - Define a custom function to compute the default table name for a given model.
+  | - Or define a custom function to compute the primary key for a given model.
+  |
+  */
+  orm: {
+  },
 }
 
 export default databaseConfig

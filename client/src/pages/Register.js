@@ -1,15 +1,12 @@
 import React from "react";
 import { Box, Typography, TextField, Button, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import UserContext from "../Context/UserContext";
 import { registerSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
-import { useSignIn } from "react-auth-kit";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const signIn = useSignIn();
 
   const initialValues = {
     email: "",
@@ -24,14 +21,8 @@ export const Register = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.post("/api/register", values);
-          signIn({
-            token: response.data.token,
-            expiresIn: 3600,
-            tokenType: "Bearer",
-            authState: { email: response.data.email },
-          });
+          localStorage.setItem("token", response.data.token);
           action.resetForm();
-          // Redirect user to HomePage
           navigate("/userDetail");
         } catch (error) {
           alert("please enter right details");
@@ -43,13 +34,6 @@ export const Register = () => {
   const ErrorTypography = styled(Typography)({
     color: "red",
   });
-
-  // const { register, setEmail, setPassword, password, email, confirmPassword, setConfirmPassword } = useContext(UserContext);
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   register();
-  // };
 
   return (
     <Box width="100%" height="100vh" display="flex" justifyContent="center">
@@ -129,7 +113,12 @@ export const Register = () => {
             >
               Make a Account
             </Button>
-            <Button color="secondary" fullWidth variant="text" onClick={() => navigate("/login")}>
+            <Button
+              color="secondary"
+              fullWidth
+              variant="text"
+              onClick={() => navigate("/login")}
+            >
               Alredy have a Account
             </Button>
           </form>

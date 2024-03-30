@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import UserContext from "../Context/UserContext";
-import { useAuthHeader } from "react-auth-kit";
 
 export const JobContext = createContext(null);
 
@@ -9,12 +8,11 @@ export const JobContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
 
   const { HeaderTypeTwo } = useContext(UserContext);
-  const authHeader = useAuthHeader();
-  // console.log(authHeader());
+  const token = localStorage.getItem("token")
 
   const ListJob = async () => {
     try {
-      if (authHeader()) {
+      if (token) {
         const response = await axios.get("/api/jobs", {
           headers: HeaderTypeTwo,
         });
@@ -29,7 +27,7 @@ export const JobContextProvider = ({ children }) => {
     // Fetch job data from your API or database here and update the 'jobs' state
     // Example: Fetch jobs from an API
     ListJob();
-  }, [authHeader()]);
+  }, [token]);
 
   const value = { jobs };
 

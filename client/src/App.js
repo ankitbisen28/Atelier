@@ -7,7 +7,6 @@ import { Navbar } from "./components/Navbar";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
 
-import { RequireAuth } from "react-auth-kit";
 import { UserDetail } from "./pages/UserDetail";
 import { UserContextProvider } from "./Context/UserContext";
 import { JobContextProvider } from "./Context/JobContext";
@@ -27,9 +26,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <RequireAuth loginPath="/login">
                     <Home />
-                  </RequireAuth>
                 }
               ></Route>
               <Route path="/about" element={<About />}></Route>
