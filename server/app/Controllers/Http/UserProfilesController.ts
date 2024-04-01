@@ -1,6 +1,6 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import Profile from "App/Models/Profile";
-import User from "App/Models/User";
+import Profile from "../../Models/Profile";
+import User from "../../Models/User";
 import { schema, rules } from "@ioc:Adonis/Core/Validator";
 import Application from "@ioc:Adonis/Core/Application";
 

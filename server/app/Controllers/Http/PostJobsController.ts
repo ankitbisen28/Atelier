@@ -1,5 +1,5 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import PostJob from "App/Models/PostJob";
+import PostJob from "../../Models/PostJob";
 import Application from "@ioc:Adonis/Core/Application";
 
 export default class PostJobsController {

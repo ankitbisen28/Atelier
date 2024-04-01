@@ -39,7 +39,18 @@ export const NavBar2 = () => {
             Jobs
           </Link>
         </Stack>
-        <Stack direction="row" alignItems="flex-end">
+        <Stack direction="row" alignItems="center">
+          <Button variant="contained" color="secondary">
+            <Link
+              style={{
+                textDecoration: "none",
+                color: "black",
+              }}
+              to="/postJob"
+            >
+              Post
+            </Link>
+          </Button>
           <Button onClick={() => navigate("/profile")}>
             <Avatar alt="Ankit Bisen" src={profile} />
           </Button>

@@ -19,7 +19,12 @@ export const Home = () => {
           marginTop={9}
           height={{ xs: "0", lg: "70vh" }}
         >
-          <Grid item xs={4} style={{ paddingLeft: "0", paddingTop: "0" }}>
+          <Grid
+            item
+            xs={4}
+            sx={{ maxHeight: "72vh", overflow: "scroll" }}
+            style={{ paddingLeft: "0", paddingTop: "0" }}
+          >
             <Category />
           </Grid>
           <Grid item xs={8} style={{ paddingLeft: "0", paddingTop: "0" }}>
@@ -27,15 +32,12 @@ export const Home = () => {
           </Grid>
         </Grid>
         <Services />
-        <Typography variant="h4" textAlign="center" mt={3}>Explore Category</Typography>
-        <Box display="flex" flexDirection="row" gap={7}>
-          <ClothCategory />
-          <ClothCategory />
+        <Typography variant="h4" textAlign="center" mt={3}>
+          Explore Category
+        </Typography>
+        <Box display="flex" alignItems={{xs:"center"}} flexDirection={{xs:"column", md:"row"}} gap={7}>
           <ClothCategory />
         </Box>
-        <Button color="error" onClick={logout}>
-          Logout
-        </Button>
       </Container>
     </>
   );

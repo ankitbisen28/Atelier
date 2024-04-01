@@ -16,7 +16,7 @@ const StyledBox = styled(Box)({
 
 export const ServiceCard = ({Icon, product}) => {
   return (
-    <StyledBox>
+    <StyledBox width={{xs:"90%", md:"50%"}}>
       <Icon color="secondary" fontSize="large"/>
       <Typography variant="h6" ml={2} fontWeight="700">{product}</Typography>
     </StyledBox>

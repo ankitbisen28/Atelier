@@ -4,6 +4,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../Context/UserContext";
+import Cloths from "../utils/Cloths.json";
 
 const StyledButton = styled(Button)({
   height: "4.5rem",
@@ -28,6 +29,7 @@ const StyledRedirectButton = styled(Button)({
 
 export const Category = () => {
   const navigate = useNavigate();
+  const cloth = Cloths.clothes;
 
   const { logout } = useContext(UserContext);
 
@@ -43,18 +45,22 @@ export const Category = () => {
             >
               Categories
             </StyledButton>
-            <Menu {...bindMenu(popupState)} sx={{ borderRadius: "none" }}>
-              <StyledMenuItem onClick={popupState.close}>
-                <StyledRedirectButton color="info" onClick={() => navigate("/profile")}>
-                My account
+            {/* <Menu {...bindMenu(popupState)} sx={{ borderRadius: "none" }}>
+              <StyledMenuItem onClick={popupState.close}> */}
+            {cloth.map((item, index) => {
+              return (
+                <StyledRedirectButton key={index} color="info">
+                  {item}
                 </StyledRedirectButton>
-              </StyledMenuItem>
-              <StyledMenuItem onClick={popupState.close}>
-                <StyledRedirectButton color="info" onClick={() => logout()}>
-                  Logout
-                </StyledRedirectButton>{" "}
-              </StyledMenuItem>
-            </Menu>
+              );
+            })}
+            {/* </StyledMenuItem> */}
+            <StyledMenuItem onClick={popupState.close}>
+              <StyledRedirectButton color="info" onClick={() => logout()}>
+                Logout
+              </StyledRedirectButton>{" "}
+            </StyledMenuItem>
+            {/* </Menu> */}
           </React.Fragment>
         )}
       </PopupState>

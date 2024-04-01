@@ -12,7 +12,7 @@ export const Services = () => {
       mt={15}
       gap={10}
       display="flex"
-      flexDirection={{ xs: "colum", lg: "row" }}
+      flexDirection={{ xs: "column", md: "row" }}
     >
       <ServiceCard Icon={LocalShippingIcon} product="Quality Product" />
       <ServiceCard Icon={CheckIcon} product="Free Shipping" />

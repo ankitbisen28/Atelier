@@ -72,7 +72,7 @@ export const Navbar = () => {
               color: "black",
             }}
           >
-            Meydit
+            Atelier
           </Link>
         </Typography>
         <Search>
