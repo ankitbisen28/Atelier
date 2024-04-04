@@ -4,9 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { loginSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
+import { useAppStore } from "../utils/store";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { cart } = useAppStore((state) => ({ cart: state.cart }))
+
+  console.log(cart)
 
   const initialValues = {
     email: "",
@@ -89,7 +93,7 @@ export const Login = () => {
               <ErrorTypography fontSize={13}>{errors.password}</ErrorTypography>
             ) : null}
             <Button
-            fullWidth
+              fullWidth
               type="submit"
               variant="contained"
               sx={{ marginTop: "1rem" }}
