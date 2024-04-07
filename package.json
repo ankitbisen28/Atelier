@@ -7,10 +7,11 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "nodejs-ecommerce-api"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run dev\""
+    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run dev\" \"yarn workspace nodejs-ecommerce-api run start\""
   },
   "dependencies": {
     "concurrently": "^8.2.2"
