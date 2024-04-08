@@ -35,11 +35,15 @@ export const loginSchema = Yup.object({
 });
 
 export const registerSchema = Yup.object({
+  name: Yup.string().min(3).required("Please enter your email"),
   email: Yup.string().email().required("Please enter your email"),
   password: Yup.string().min(6).required("Please enter your password"),
-  confirm_password: Yup.string()
-    .required()
-    .oneOf([Yup.ref("password"), null], "Password must match"),
+  phone: Yup.string().min(10).max(10).required("Please enter your phone number"),
+  street: Yup.string().max(30).required("Please enter your street name"),
+  apartment:  Yup.string().max(30).required("Please enter your apartment"),
+  zip: Yup.string().max(6).required("Please enter your zip"),
+  city: Yup.string().max(10).required("Please enter your city name"),
+  country: Yup.string().max(10).required("Please Enteer your country")
 });
 
 export const userDetailsSchema = Yup.object({

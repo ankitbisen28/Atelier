@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Button, MenuItem, Menu, styled } from "@mui/material";
+import { Button, MenuItem, Menu, styled, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { useNavigate } from "react-router-dom";
@@ -35,35 +35,27 @@ export const Category = () => {
 
   return (
     <>
-      <PopupState variant="popover" popupId="demo-popup-menu">
-        {(popupState) => (
-          <React.Fragment>
-            <StyledButton
-              variant="contained"
-              {...bindTrigger(popupState)}
-              endIcon={<KeyboardArrowDownIcon />}
-            >
-              Categories
-            </StyledButton>
-            {/* <Menu {...bindMenu(popupState)} sx={{ borderRadius: "none" }}>
-              <StyledMenuItem onClick={popupState.close}> */}
-            {cloth.map((item, index) => {
-              return (
-                <StyledRedirectButton key={index} color="info">
-                  {item}
-                </StyledRedirectButton>
-              );
-            })}
-            {/* </StyledMenuItem> */}
-            <StyledMenuItem onClick={popupState.close}>
-              <StyledRedirectButton color="info" onClick={() => logout()}>
-                Logout
-              </StyledRedirectButton>{" "}
-            </StyledMenuItem>
-            {/* </Menu> */}
-          </React.Fragment>
-        )}
-      </PopupState>
+
+      <Typography textAlign='center'
+      variant="h5"
+      margin="20px 20px"
+      fontWeight={600}
+        style={{ background: "#ffff" }}
+      >
+        Categories
+      </Typography>
+      {cloth.map((item, index) => {
+        return (
+          <StyledRedirectButton key={index} color="info">
+            {item}
+          </StyledRedirectButton>
+        );
+      })}
+      <StyledMenuItem>
+        <StyledRedirectButton color="info" onClick={() => logout()}>
+          Logout
+        </StyledRedirectButton>{" "}
+      </StyledMenuItem>
     </>
   );
 };

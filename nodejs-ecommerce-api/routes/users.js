@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const User = require('../models/user');
+require('dotenv/config');
+
+const JWT_SECRET = process.env.secret;
 
 router.get('/', async (req, res) =>{
     const userList = await User.find().select('-passwordHash');
@@ -42,7 +45,12 @@ router.post('/register', async (req, res) => {
 
     if (!user)
         return res.status(404).send('User cannot be created')
-    res.send(user);
+
+     // Generate JWT token for the registered user
+     const token = jwt.sign({ username: user.email }, JWT_SECRET, { expiresIn: '1d' });
+
+     res.status(201).json({ message: 'User registered successfully', token });
+    // res.send(user);
 })
 
 router.delete('/:id', (req, res) => {

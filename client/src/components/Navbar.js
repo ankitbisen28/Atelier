@@ -87,7 +87,6 @@ export const Navbar = () => {
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           <IconButton
             sx={{
-              border: "1px solid #edf1ff !important",
               padding: ".375rem .75rem",
               borderRadius: "0",
               margin: "15px",
@@ -102,7 +101,6 @@ export const Navbar = () => {
           </IconButton>
           <IconButton
             sx={{
-              border: "1px solid #edf1ff !important",
               padding: ".375rem .75rem",
               borderRadius: "0",
               margin: "15px",

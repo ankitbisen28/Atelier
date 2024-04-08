@@ -16,7 +16,7 @@ export const Home = () => {
           container
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
-          marginTop={9}
+          marginTop={8}
           height={{ xs: "0", lg: "70vh" }}
         >
           <Grid
