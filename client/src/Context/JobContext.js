@@ -6,8 +6,9 @@ export const JobContext = createContext(null);
 
 export const JobContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const { HeaderTypeTwo } = useContext(UserContext);
+  const { headers, HeaderTypeTwo } = useContext(UserContext);
   const token = localStorage.getItem("token")
 
   const ListJob = async () => {
@@ -23,13 +24,23 @@ export const JobContextProvider = ({ children }) => {
     }
   };
 
+  const listCat = async () => {
+    try {
+      const response = await axios.get("/api/v1/categories", {headers: headers});
+      setCategories(response.data)
+    } catch (error) {
+      console.log(error.message); 
+    }
+  }
+
   useEffect(() => {
     // Fetch job data from your API or database here and update the 'jobs' state
     // Example: Fetch jobs from an API
     ListJob();
+    listCat();
   }, [token]);
 
-  const value = { jobs };
+  const value = { jobs, categories };
 
   return <JobContext.Provider value={value}> {children} </JobContext.Provider>;
 };

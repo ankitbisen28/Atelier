@@ -12,6 +12,7 @@ import { UserContextProvider } from "./Context/UserContext";
 import { JobContextProvider } from "./Context/JobContext";
 import { PostJob } from "./pages/PostJob";
 import JobList from "./pages/ListJob";
+import { ProtectedRoute } from "./utils/ProtectedRoute";
 
 function App() {
   return (
@@ -26,11 +27,20 @@ function App() {
               <Route
                 path="/"
                 element={
+                  <ProtectedRoute>
                     <Home />
+                  </ProtectedRoute>
                 }
               ></Route>
               <Route path="/about" element={<About />}></Route>
-              <Route path="/profile" element={<Profile />}></Route>
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route path="/userDetail" element={<UserDetail />}></Route>
               <Route path="/postJob" element={<PostJob />}></Route>
               <Route path="/listjobs" element={<JobList />}></Route>

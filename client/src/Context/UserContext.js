@@ -11,7 +11,6 @@ export const UserContextProvider = ({ children }) => {
   const [userDetails, setuserDetails] = useState(
     JSON.parse(localStorage.getItem("userDetails")) || []
   );
-  const [profile, setProfile] = useState("");
   const navigate = useNavigate();
 
   // console.log(userDetails);
@@ -25,22 +24,6 @@ export const UserContextProvider = ({ children }) => {
   const HeaderTypeTwo = {
     "Content-Type": "multipart/form-data",
     Authorization: `bearer ${token}`,
-  };
-
-  const UserImage = async () => {
-    try {
-      if (userDetails) {
-        const imagePath = userDetails[0].userProfile[0].image;
-        const profileImage = await axios.get(`/api/user/image/${imagePath}`, {
-          headers: headers,
-          responseType: "blob",
-        });
-        const url = window.URL.createObjectURL(new Blob([profileImage.data]));
-        setProfile(url);
-      }
-    } catch (error) {
-      console.error("Error fetching user Image:", error);
-    }
   };
 
   const fetchUserDetails = async () => {
@@ -63,11 +46,6 @@ export const UserContextProvider = ({ children }) => {
     // eslint-disable-next-line
   }, [token, userDetails]);
 
-  useEffect(() => {
-    UserImage();
-    // eslint-disable-next-line
-  }, [profile]);
-
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -84,7 +62,6 @@ export const UserContextProvider = ({ children }) => {
     setConfirmPassword,
     headers,
     userDetails,
-    profile,
     HeaderTypeTwo,
   };
 
