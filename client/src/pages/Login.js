@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, TextField, Button, styled } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -9,7 +9,6 @@ import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
@@ -96,6 +95,13 @@ export const Login = () => {
           >
             Login
           </Button>
+          <Grid container>
+              <Grid item>
+                <Link to="/register" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
         </Box>
       </Box>
     </Container>

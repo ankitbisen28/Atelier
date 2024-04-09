@@ -26,25 +26,25 @@ export const UserContextProvider = ({ children }) => {
     Authorization: `bearer ${token}`,
   };
 
-  const fetchUserDetails = async () => {
-    try {
-      if (token) {
-        const response = await axios.get("/api/user/profiles", {
-          headers: headers,
-        });
-        localStorage.setItem("userDetails", JSON.stringify(response.data));
-        setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
-      }
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
-  };
+  // const fetchUserDetails = async () => {
+  //   try {
+  //     if (token) {
+  //       const response = await axios.get("/api/user/profiles", {
+  //         headers: headers,
+  //       });
+  //       localStorage.setItem("userDetails", JSON.stringify(response.data));
+  //       setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching user details:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchUserDetails();
-    // UserImage();
-    // eslint-disable-next-line
-  }, [token, userDetails]);
+  // useEffect(() => {
+  //   fetchUserDetails();
+  //   // UserImage();
+  //   // eslint-disable-next-line
+  // }, [token, userDetails]);
 
   const logout = () => {
     localStorage.removeItem("token");

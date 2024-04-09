@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Grid, TextField, styled, Button, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { registerSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -171,9 +171,16 @@ export const Register = () => {
             ) : null}
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary">
+        <Button sx={{mt:3}} fullWidth type="submit" variant="contained" color="primary">
           Register
         </Button>
+        <Grid container>
+              <Grid item mt={2}>
+                <Link to="/login" variant="body2">
+                  {"Already have an account? Login Up"}
+                </Link>
+              </Grid>
+            </Grid>
       </form>
     </Box>
 

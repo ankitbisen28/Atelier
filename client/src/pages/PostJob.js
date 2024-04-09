@@ -3,9 +3,14 @@ import {
   Typography,
   TextField,
   Box,
+  Grid,
   Button,
   styled,
   Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 import Cloths from "../utils/Cloths.json";
@@ -20,41 +25,53 @@ import { postJobSchema } from "../Schema";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
+import JobContext from "../Context/JobContext";
 
 export const PostJob = () => {
-  const { headers } = useContext(UserContext);
+  const { HeaderTypeTwo } = useContext(UserContext);
+  const { categories } = useContext(JobContext);
 
   const [open, setOpen] = useState(false);
 
   const initialValues = {
-    first_name: "",
-    last_name: "",
-    phone_num: "",
-    address: "",
-    type_clothing: "",
-    post_code: "",
-    budget: "",
-    post_description: "",
-    state: "",
-    email: "",
-    image: "",
+    name: '',
+    description: '',
+    rich: '',
+    brand: '',
+    
+    price: '',
+    category: '',
+    countInStock: '',
+    rating: '',
+    numReview: ''
   };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: initialValues,
-      validationSchema: postJobSchema,
+      // validationSchema: postJobSchema,
       onSubmit: async (values, action) => {
-        await axios.post("/api/post/job", values, {
-          headers: headers,
-        });
-        // console.log(response);
-        action.resetForm();
-        setOpen(true);
+        // console.log({ 
+        //   fileName: values.file.name, 
+        //   type: values.file.type,
+        //   size: `${values.file.size} bytes`
+        // })
+        console.log(values)
+        try {
+          const response = await axios.post("/api/v1/products", values, {
+            headers: HeaderTypeTwo,
+          });
+          console.log(response);
+          action.resetForm();
+          setOpen(true);
+        } catch (error) {
+            console.log(error)
+        }
+      
       },
     });
 
-  // console.log(errors);
+  // console.log(values);
 
   const ErrorTypography = styled(Typography)({
     color: "red",
@@ -63,208 +80,136 @@ export const PostJob = () => {
   const cloth = Cloths.clothes;
 
   return (
-    <Container>
-      <Typography marginTop="6rem" textAlign="center" variant="h4">
-        Post job
-      </Typography>
-      <Collapse in={open}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          Your Job Posted
-        </Alert>
-      </Collapse>
-      <form onSubmit={handleSubmit}>
-        <Box display="flex" flexDirection="row" justifyContent="center">
-          <Box>
-            <TextField
-              name="first_name"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="First Name"
-              variant="outlined"
-              color="primary"
-              value={values.first_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.first_name && errors.first_name ? (
-              <ErrorTypography fontSize={13}>
-                {errors.first_name}
-              </ErrorTypography>
-            ) : null}
+    <Grid container width={"70%"} margin={"auto"} mt={7} spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="h4" textAlign={"center"} gutterBottom>
+          Post Job
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="name"
+                label="Name"
+                value={values.name}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="description"
+                label="Description"
+                value={values.description}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="rich"
+                label="Rich Text"
+                value={values.rich}
+                onChange={handleChange}
+                multiline
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="brand"
+                label="Brand"
+                value={values.brand}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                
+                type="file"
+                
+                onChange={(event) => {
+                  setFieldValue("image", event.currentTarget.files[0])}}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="price"
+                label="Price"
+                value={values.price}
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel>Category</InputLabel>
+                <Select
+                  name="category"
+                  value={values.category}
+                  onChange={handleChange}
+                >
+                  {categories.map((category) =>{return (
+                    <MenuItem key={category._id} value={category._id}>
+                      {category.name}
+                    </MenuItem>
+                  )})}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="countInStock"
+                label="Count In Stock"
+                value={values.countInStock}
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="rating"
+                label="Rating"
+                value={values.rating}
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="numReview"
+                label="Number of Reviews"
+                value={values.numReview}
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </Grid>
+          </Grid>
+          <Box display={"flex"} mt={3} flexDirection={"column"} alignItems={"center"}>
+
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
           </Box>
-          <Box>
-            <TextField
-              name="last_name"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Last Name"
-              variant="outlined"
-              color="primary"
-              value={values.last_name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.last_name && errors.last_name ? (
-              <ErrorTypography fontSize={13}>
-                {errors.last_name}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
-              name="email"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="email"
-              type="email"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.email}
-              onBlur={handleBlur}
-            />
-            {touched.email && errors.email ? (
-              <ErrorTypography fontSize={13}>{errors.email}</ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="row" justifyContent="center">
-          <Box>
-            <TextField
-              name="phone_num"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Phone"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.phone_num}
-              onBlur={handleBlur}
-            />
-            {touched.phone_num && errors.phone_num ? (
-              <ErrorTypography fontSize={13}>
-                {errors.phone_num}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
-              name="budget"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Budget"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.budget}
-              onBlur={handleBlur}
-            />
-            {touched.budget && errors.budget ? (
-              <ErrorTypography fontSize={13}>{errors.budget}</ErrorTypography>
-            ) : null}
-          </Box>
-          <ClothList
-            errors={errors}
-            cloth={cloth}
-            values={values}
-            handleChange={handleChange}
-          />
-        </Box>
-        <Box display="flex" flexDirection="row" justifyContent="center">
-          <Box>
-            <Input
-              sx={{ width: "17rem", margin: "2rem 1rem 0 0" }}
-              type="file"
-              name="image"
-              onChange={handleChange}
-              value={values.image}
-              onBlur={handleBlur}
-            />
-            {touched.image && errors.image ? (
-              <ErrorTypography fontSize={13}>{errors.image}</ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
-              name="address"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Address"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.address}
-              onBlur={handleBlur}
-            />
-            {touched.address && errors.address ? (
-              <ErrorTypography fontSize={13}>{errors.address}</ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
-              name="post_code"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Zip Code"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.post_code}
-              onBlur={handleBlur}
-            />
-            {touched.post_code && errors.post_code ? (
-              <ErrorTypography fontSize={13}>
-                {errors.post_code}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="row" justifyContent="center">
-          <StateList
-            values={values}
-            state={state}
-            errors={errors}
-            handleChange={handleChange}
-          />
-          <Box>
-            <TextField
-              name="post_description"
-              sx={{ margin: "2rem 1rem 0 0", width: "30rem" }}
-              multiline
-              rows={4}
-              label="Description"
-              variant="outlined"
-              color="primary"
-              onChange={handleChange}
-              value={values.post_description}
-              onBlur={handleBlur}
-            />
-            {touched.post_description && errors.post_description ? (
-              <ErrorTypography fontSize={13}>
-                {errors.post_description}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="row" justifyContent="center">
-          {" "}
-          <Button
-            size="large"
-            sx={{ margin: "2rem 1rem 0 0" }}
-            variant="contained"
-            type="submit"
-          >
-            Post Job
-          </Button>
-        </Box>
-      </form>
-    </Container>
+        </form>
+      </Grid>
+    </Grid>
   );
 };
