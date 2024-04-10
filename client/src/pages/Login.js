@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Typography, TextField, Button, styled } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { loginSchema } from "../Schema";
@@ -7,18 +7,16 @@ import axios from "axios";
 import { useAppStore } from "../utils/store";
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import UserContext from "../Context/UserContext";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const { setuserDetails, userDetails } = useContext(UserContext)
   const { cart } = useAppStore((state) => ({ cart: state.cart }))
-
-  // console.log(cart)
 
   const initialValues = {
     email: "",
@@ -36,6 +34,8 @@ export const Login = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.post('/api/v1/users/login', values);
+          localStorage.setItem("userDetails", JSON.stringify(response.data.user));
+          setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
           const token = response.data.token; // Assuming the server returns a token upon successful login
           localStorage.setItem('token', token);
           navigate("/");
@@ -81,7 +81,7 @@ export const Login = () => {
             name="password"
             label="Password"
             type="password"
-            value={values.email}
+            value={values.password}
             onChange={handleChange}
             id="password"
             autoComplete="current-password"
@@ -96,12 +96,12 @@ export const Login = () => {
             Login
           </Button>
           <Grid container>
-              <Grid item>
-                <Link to="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+            <Grid item>
+              <Link to="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
             </Grid>
+          </Grid>
         </Box>
       </Box>
     </Container>

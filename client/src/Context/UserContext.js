@@ -63,6 +63,7 @@ export const UserContextProvider = ({ children }) => {
     headers,
     userDetails,
     HeaderTypeTwo,
+    setuserDetails,
   };
 
   return (

@@ -5,6 +5,8 @@ import { registerSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
 import { countries } from '../utils/countries';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Avatar from '@mui/material/Avatar';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -45,7 +47,15 @@ export const Register = () => {
 
   return (
     <Box width={"60%"} padding={7} margin={"auto"}>
-      <Typography variant="h3" fontWeight={"500"} margin={"20px 20px"} textAlign="center">Register</Typography>
+      <Box xs={6} margin={"10px 10px"} display={"flex"} flexDirection={"column"} alignItems={"center"}>
+
+      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+      </Box>
+        <Typography textAlign={"center"} margin={"10px 10px"} component="h1" variant="h5">
+          Register
+        </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={6}>
