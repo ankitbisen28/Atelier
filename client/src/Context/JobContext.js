@@ -11,18 +11,16 @@ export const JobContextProvider = ({ children }) => {
   const { headers, HeaderTypeTwo } = useContext(UserContext);
   const token = localStorage.getItem("token")
 
-  // const ListJob = async () => {
-  //   try {
-  //     if (token) {
-  //       const response = await axios.get("/api/jobs", {
-  //         headers: HeaderTypeTwo,
-  //       });
-  //       setJobs(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+  const ListJob = async () => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/products`, {
+          headers: HeaderTypeTwo,
+        });
+        setJobs(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const listCat = async () => {
     try {
@@ -34,9 +32,7 @@ export const JobContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    // Fetch job data from your API or database here and update the 'jobs' state
-    // Example: Fetch jobs from an API
-    // ListJob();
+    ListJob();
     listCat();
   }, [token]);
 

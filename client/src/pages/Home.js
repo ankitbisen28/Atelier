@@ -5,10 +5,9 @@ import { Category } from "../components/Category";
 import { Banner } from "../components/Banner";
 import { Services } from "../components/Services";
 import { ClothCategory } from "../components/ClothCategory";
+import { JobCard } from "../components/JobCard";
 
 export const Home = () => {
-  const { logout } = useContext(UserContext);
-
   return (
     <>
       <Container style={{ maxWidth: "1350px" }}>
@@ -37,6 +36,9 @@ export const Home = () => {
         </Typography>
         <Box display="flex" alignItems={{xs:"center"}} flexDirection={{xs:"column", md:"row"}} gap={7}>
           <ClothCategory />
+        </Box>
+        <Box>
+          <JobCard />
         </Box>
       </Container>
     </>
