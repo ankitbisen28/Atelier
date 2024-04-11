@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
      // Generate JWT token for the registered user
      const token = jwt.sign({ username: user.email }, JWT_SECRET, { expiresIn: '1d' });
 
-     res.status(201).json({ message: 'User registered successfully', token });
+     res.status(201).json({ user: user.id, token });
     // res.send(user);
 })
 
@@ -78,7 +78,7 @@ router.post('/login', async (req, res) => {
             userID: user.id,
             isAdmin : user.isAdmin
         }, secret, {expiresIn : '1d'} )
-        res.status(200).json({user: user, token: token});
+        res.status(200).json({user: user.id, token: token});
     } else {
         res.status(400).send('Password is mismatch');
     }

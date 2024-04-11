@@ -31,7 +31,7 @@ export const Register = () => {
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, values);
         localStorage.setItem("token", response.data.token);
-        console.log(response.data)
+        localStorage.setItem("userId", response.data.user)
         action.resetForm();
         navigate("/");
       } catch (error) {

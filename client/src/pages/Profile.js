@@ -1,4 +1,5 @@
-import {useContext} from 'react';
+import { useContext, useEffect } from 'react';
+import axios from 'axios'
 import { Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Grid } from '@mui/material';
 import UserContext from '../Context/UserContext';
 
@@ -22,9 +23,23 @@ const userData = {
 };
 
 
+
+
 export const Profile = () => {
-  const { userDetails } = useContext(UserContext)
-  console.log(userDetails)
+  const { token, userDetails, setuserDetails, headers } = useContext(UserContext)
+  const userId = localStorage.getItem("userId")
+
+  const getUserDetails = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, { headers: headers });
+      setuserDetails(response.data)
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  useEffect(() => {
+    getUserDetails();
+  }, [token])
   return (
     <Grid width={"70%"} margin={"auto"} container spacing={3}>
       <Grid item xs={12}>

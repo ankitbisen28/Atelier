@@ -10,12 +10,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import UserContext from "../Context/UserContext";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { setuserDetails, userDetails } = useContext(UserContext)
   const { cart } = useAppStore((state) => ({ cart: state.cart }))
 
   const initialValues = {
@@ -34,8 +31,7 @@ export const Login = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/login`, values);
-          localStorage.setItem("userDetails", JSON.stringify(response.data.user));
-          setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
+          localStorage.setItem("userId",response.data.user)
           const token = response.data.token; // Assuming the server returns a token upon successful login
           localStorage.setItem('token', token);
           navigate("/");

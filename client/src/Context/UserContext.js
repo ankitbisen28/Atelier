@@ -8,7 +8,9 @@ export const UserContextProvider = ({ children }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [userDetails, setuserDetails] = useState([]);
+  const [userDetails, setuserDetails] = useState(
+    JSON.parse(localStorage.getItem("userDetails")) || []
+  );
   const navigate = useNavigate();
 
   // console.log(userDetails);
@@ -46,8 +48,8 @@ export const UserContextProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     navigate("/login");
-    localStorage.removeItem("userDetails");
   };
 
   const value = {
@@ -62,6 +64,7 @@ export const UserContextProvider = ({ children }) => {
     userDetails,
     HeaderTypeTwo,
     setuserDetails,
+    token
   };
 
   return (
