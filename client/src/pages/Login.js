@@ -33,7 +33,7 @@ export const Login = () => {
       validationSchema: loginSchema,
       onSubmit: async (values, action) => {
         try {
-          const response = await axios.post('/api/v1/users/login', values);
+          const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/login`, values);
           localStorage.setItem("userDetails", JSON.stringify(response.data.user));
           setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
           const token = response.data.token; // Assuming the server returns a token upon successful login

@@ -58,7 +58,7 @@ export const PostJob = () => {
         // })
         console.log(values)
         try {
-          const response = await axios.post("/api/v1/products", values, {
+          const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/products`, values, {
             headers: HeaderTypeTwo,
           });
           console.log(response);

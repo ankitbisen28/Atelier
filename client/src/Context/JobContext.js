@@ -26,7 +26,7 @@ export const JobContextProvider = ({ children }) => {
 
   const listCat = async () => {
     try {
-      const response = await axios.get("/api/v1/categories", {headers: headers});
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/categories`, {headers: headers});
       setCategories(response.data)
     } catch (error) {
       console.log(error.message); 

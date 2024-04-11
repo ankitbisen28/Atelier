@@ -37,7 +37,7 @@ export const UserDetail = () => {
     initialValues: initialValues,
     validationSchema: userDetailsSchema,
     onSubmit: async (values, action) => {
-      const response = await axios.post("/api/user/profile/create", values, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/user/profile/create`, values, {
         headers: HeaderTypeTwo,
       });
       action.resetForm();

@@ -29,7 +29,7 @@ export const Register = () => {
     validationSchema: registerSchema,
     onSubmit: async (values, action) => {
       try {
-        const response = await axios.post("/api/v1/users/register", values);
+        const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, values);
         localStorage.setItem("token", response.data.token);
         console.log(response.data)
         action.resetForm();
