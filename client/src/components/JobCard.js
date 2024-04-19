@@ -3,22 +3,16 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
-import {Box, Typography} from '@mui/material';
-
-import Carousel from "react-material-ui-carousel";
-import bannerOne from "../assets/Images/banner-1.jpg";
-import bannerTwo from "../assets/Images/banner-2.jpg";
-import bannerThree from "../assets/Images/banner-3.jpg";
-import bannerFour from "../assets/Images/banner-4.jpg";
+import { Typography} from '@mui/material';
 import { useContext } from 'react';
 import JobContext from '../Context/JobContext';
+import { Link } from 'react-router-dom';
 
 export const JobCard = () => {
   const { jobs } = useContext(JobContext);
-  console.log(jobs);
   return (
     <>
-    <Box display={"flex"} width={"100%"} margin={"auto"} flexDirection={"row"} >
+    
 
   
     {jobs.map((job)=>{
@@ -26,7 +20,7 @@ export const JobCard = () => {
         <Card key={job.id} sx={{ width: 400 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image="/static/images/cards/contemplative-reptile.jpg"
+        image={job.image}
         title="green iguana"
       />
       <CardContent>
@@ -39,13 +33,12 @@ export const JobCard = () => {
       </CardContent>
       <CardActions>
         <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        <Link style={{textDecoration:"none", fontFamily:"Poppins,sans-serif", color:"#58A399"}} to={`/product/${job.id}`}>Learn More</Link>
       </CardActions>
     </Card>
       
       )
     })}
-    </Box>
     </>
     
   );

@@ -1,11 +1,16 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { JobCard } from "../components/JobCard";
 
 const JobList = () => {
   return (
     <>
-      <JobCard />
+      <Typography margin={10} textAlign={"center"} variant="h4">
+        Letest Jobs
+      </Typography>
+      <Box display={"flex"} width={"100%"} gap={4} flexWrap={"wrap"} flexDirection={"row"} alignItems={"center"} justifyContent={'center'} >
+        <JobCard />
+      </Box>
     </>
   );
 };

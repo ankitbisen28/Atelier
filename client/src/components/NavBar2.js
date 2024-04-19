@@ -6,6 +6,7 @@ import UserContext from "../Context/UserContext";
 export const NavBar2 = () => {
   const { profile, logout } = useContext(UserContext);
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
 
   return (
     <AppBar position="static" sx={{ boxShadow: "none", background:"#ffff" }}>
@@ -54,7 +55,7 @@ export const NavBar2 = () => {
           <Button sx={{margin:'3px'}} onClick={logout} variant="contained" color="secondary">
               logout
           </Button>
-          <Button onClick={() => navigate("/profile")}>
+          <Button onClick={() => navigate(`/user/${userId}`)}>
             <Avatar alt="Ankit Bisen" src={profile} />
           </Button>
         </Stack>

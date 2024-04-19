@@ -37,7 +37,10 @@ export const Home = () => {
         <Box display="flex" alignItems={{xs:"center"}} flexDirection={{xs:"column", md:"row"}} gap={7}>
           <ClothCategory />
         </Box>
-        <Box>
+          <Typography textAlign={"center"} padding={4} variant="h4">
+            Letest Jobs
+          </Typography>
+        <Box mt={7} display={"flex"} width={"100%"} margin={"auto"} gap={4} flexWrap={"wrap"} flexDirection={"row"} >
           <JobCard />
         </Box>
       </Container>
