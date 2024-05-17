@@ -13,6 +13,7 @@
     "start": "concurrently \"yarn workspace client start\" \"yarn workspace nodejs-ecommerce-api run start\""
   },
   "dependencies": {
+    "@emotion/styled": "^11.11.5",
     "concurrently": "^8.2.2"
   }
 }
