@@ -1,28 +1,18 @@
-import React, { useContext } from "react";
-import { Box, Typography, TextField, Button, styled } from "@mui/material";
+import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginSchema } from "../Schema";
 import { useFormik } from "formik";
 import axios from "axios";
+import { loginSchema } from "../Schema";
 import { useAppStore } from "../utils/store";
-import Avatar from '@mui/material/Avatar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Container from '@mui/material/Container';
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { cart } = useAppStore((state) => ({ cart: state.cart }))
+  const { cart } = useAppStore((state) => ({ cart: state.cart }));
 
   const initialValues = {
     email: "",
     password: "",
   };
-
-  const ErrorTypography = styled(Typography)({
-    color: "red",
-  });
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
@@ -30,76 +20,96 @@ export const Login = () => {
       validationSchema: loginSchema,
       onSubmit: async (values, action) => {
         try {
-          const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/login`, values);
-          localStorage.setItem("userId",response.data.user)
+          const response = await axios.post(
+            `${import.meta.env.VITE_API_URI}/api/v1/users/login`,
+            values
+          );
+          localStorage.setItem("userId", response.data.user);
           const token = response.data.token; // Assuming the server returns a token upon successful login
-          localStorage.setItem('token', token);
+          localStorage.setItem("token", token);
           navigate("/");
         } catch (error) {
-          console.error('Login failed:', error);
+          console.error("Login failed:", error);
         }
       },
     });
+
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            value={values.password}
-            onChange={handleChange}
-            id="password"
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Login
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Container>
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-full max-w-xs">
+        <div className="flex flex-col items-center">
+          <div className="m-4 p-2 bg-gray-200 rounded-full">
+            <svg
+              className="h-12 w-12 text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 11c2.21 0 4-1.79 4-4S14.21 3 12 3 8 4.79 8 7s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+              ></path>
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold mb-4">Login</h1>
+        </div>
+        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Email Address
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              name="email"
+              value={values.email}
+              onChange={handleChange}
+              autoComplete="email"
+              autoFocus
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              name="password"
+              value={values.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Login
+            </button>
+          </div>
+          <div className="mt-4">
+            <Link
+              to="/register"
+              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+            >
+              Don't have an account? Sign Up
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };

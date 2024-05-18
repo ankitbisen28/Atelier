@@ -1,8 +1,6 @@
 import { useContext, useEffect } from 'react';
-import axios from 'axios'
-import { Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Paper, Grid } from '@mui/material';
+import axios from 'axios';
 import UserContext from '../Context/UserContext';
-
 
 const userData = {
   name: 'John Doe',
@@ -22,61 +20,61 @@ const userData = {
   ],
 };
 
-
-
-
 export const Profile = () => {
-  const { token, userDetails, setuserDetails, headers } = useContext(UserContext)
-  const userId = localStorage.getItem("userId")
+  const { token, userDetails, setuserDetails, headers } = useContext(UserContext);
+  const userId = localStorage.getItem("userId");
 
   const getUserDetails = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, { headers: headers });
-      setuserDetails(response.data)
+      setuserDetails(response.data);
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
+
   useEffect(() => {
     getUserDetails();
-  }, [token])
+  }, [token]);
+
+
   return (
-    <Grid width={"70%"} margin={"auto"} container spacing={3}>
-      <Grid item xs={12}>
-        <Typography variant="h4" gutterBottom align="center">User Profile</Typography>
-      </Grid>
+    <div className="container mx-auto mt-8">
+      <div className="w-3/4 mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-6">User Profile</h2>
 
-      <Grid item xs={12}>
-        <Typography variant="h6" gutterBottom>Personal Information</Typography>
-        <Typography variant="body1">Name: {userDetails.name}</Typography>
-        <Typography variant="body1">Email: {userDetails.email}</Typography>
-        <Typography variant="body1">Phone: {userDetails.phone}</Typography>
-        <Typography variant="body1">Address: {`${userDetails.apartment}, ${userDetails.street}, ${userDetails.city}, ${userDetails.zip}, ${userDetails.country}`}</Typography>
-      </Grid>
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
+          <p className="text-lg"><strong>Name:</strong> {userDetails.name}</p>
+          <p className="text-lg"><strong>Email:</strong> {userDetails.email}</p>
+          <p className="text-lg"><strong>Phone:</strong> {userDetails.phone}</p>
+          <p className="text-lg"><strong>Address:</strong> {`${userDetails.apartment}, ${userDetails.street}, ${userDetails.city}, ${userDetails.zip}, ${userDetails.country}`}</p>
+        </div>
 
-      <Grid item xs={12}>
-        <Typography variant="h6" gutterBottom>Applied Jobs</Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Company</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userData.appliedJobs.map(job => (
-                <TableRow key={job.id}>
-                  <TableCell>{job.id}</TableCell>
-                  <TableCell>{job.title}</TableCell>
-                  <TableCell>{job.company}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-    </Grid>
+        <div>
+          <h3 className="text-xl font-semibold mb-2">Applied Jobs</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 border-b">ID</th>
+                  <th className="px-4 py-2 border-b">Title</th>
+                  <th className="px-4 py-2 border-b">Company</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userData.appliedJobs.map(job => (
+                  <tr key={job.id}>
+                    <td className="px-4 py-2 border-b">{job.id}</td>
+                    <td className="px-4 py-2 border-b">{job.title}</td>
+                    <td className="px-4 py-2 border-b">{job.company}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};

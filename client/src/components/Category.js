@@ -1,33 +1,22 @@
 import React, { useContext } from "react";
-import { Button, styled, Typography } from "@mui/material";
 import JobContext from "../Context/JobContext";
-
-const StyledRedirectButton = styled(Button)({
-  color: "#1c1c1c",
-  width: "100%",
-});
 
 export const Category = () => {
   const { categories } = useContext(JobContext);
 
   return (
     <>
-
-      <Typography textAlign='center'
-      variant="h5"
-      margin="20px 20px"
-      fontWeight={600}
-        style={{ background: "#ffff" }}
-      >
+      <h5 className="text-center text-xl font-semibold my-5 color-white">
         Categories
-      </Typography>
-      {categories.map((item, index) => {
-        return (
-          <StyledRedirectButton key={item._id} color="info">
-            {item.name}
-          </StyledRedirectButton>
-        );
-      })}
+      </h5>
+      {categories.map((item) => (
+        <button
+          key={item._id}
+          className="w-full py-2 px-4 text-white bg-info-500 hover:bg-info-600"
+        >
+          {item.name}
+        </button>
+      ))}
     </>
   );
 };

@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import React from "react";
 import { ServiceCard } from "./ServiceCard";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -8,16 +7,11 @@ import AddIcCallIcon from "@mui/icons-material/AddIcCall";
 
 export const Services = () => {
   return (
-    <Box
-      mt={15}
-      gap={10}
-      display="flex"
-      flexDirection={{ xs: "column", md: "row" }}
-    >
+    <div className="mt-16 flex flex-col md:flex-row gap-10">
       <ServiceCard Icon={LocalShippingIcon} product="Quality Product" />
       <ServiceCard Icon={CheckIcon} product="Free Shipping" />
       <ServiceCard Icon={CompareArrowsIcon} product="14-Day Return" />
       <ServiceCard Icon={AddIcCallIcon} product="24/7 Support" />
-    </Box>
+    </div>
   );
 };

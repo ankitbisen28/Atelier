@@ -1,31 +1,28 @@
 import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, Grid, Button, IconButton } from '@mui/material';
-import { AddShoppingCart, Remove, Add } from '@mui/icons-material';
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 import UserContext from '../Context/UserContext';
 
 const ProductPage = () => {
-    const {id, HeaderTypeTwo} = useParams();
-    const {token} = useContext(UserContext);
+  const { id, HeaderTypeTwo } = useParams();
+  const { token } = useContext(UserContext);
   const [product, setProduct] = React.useState({});
-  console.log(product)
-  const [quantity, setQuantity ] = React.useState(1);
+  const [quantity, setQuantity] = React.useState(1);
 
   const getProductDetail = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/products/${id}`, {
-          headers: HeaderTypeTwo,
-        });
-        setProduct(response.data);
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/products/${id}`, {
+        headers: HeaderTypeTwo,
+      });
+      setProduct(response.data);
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getProductDetail();
-  }, [token])
+  }, [token]);
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -38,85 +35,68 @@ const ProductPage = () => {
   };
 
   return (
-    <Container sx={{marginTop:16}}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <img src={product.image} alt="Product" style={{ maxWidth: '100%', borderRadius:"20px" }} />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h4" gutterBottom>
-            {product.name}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            ${product.price}
-          </Typography>
-          <Typography variant="body2" paragraph>
-            {product.description}
-          </Typography>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item>
-              <Typography variant="body2">Category:</Typography>
-            </Grid>
-            <Grid item>
-              <label>
-                <input type="checkbox" value="XS" />
-                XS
-              </label>
-            </Grid>
-            <Grid item>
-              <label>
-                <input type="checkbox" value="S" />
-                S
-              </label>
-            </Grid>
-            <Grid item>
-              <label>
-                <input type="checkbox" value="M" />
-                M
-              </label>
-            </Grid>
-            <Grid item>
-              <label>
-                <input type="checkbox" value="L" />
-                L
-              </label>
-            </Grid>
-            <Grid item>
-              <label>
-                <input type="checkbox" value="XL" />
-                XL
-              </label>
-            </Grid>
-          </Grid>
-          <Typography variant="body2">Colors:</Typography>
-          <Button variant="outlined" style={{ marginRight: 8 }}>Black</Button>
-          <Button variant="outlined" style={{ marginRight: 8 }}>White</Button>
-          <Button variant="outlined" style={{ marginRight: 8 }}>Red</Button>
-          <Button variant="outlined" style={{ marginRight: 8 }}>Blue</Button>
-          <Button variant="outlined">Green</Button>
-          <Grid container alignItems="center" spacing={2} style={{ marginTop: 16 }}>
-            <Grid item>
-              <IconButton onClick={handleDecrease}>
-                <Remove />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">{quantity}</Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={handleIncrease}>
-                <Add />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="primary" startIcon={<AddShoppingCart />}>
-                Add To Cart
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Container>
+    <div className="container mx-auto mt-16 px-4">
+      <div className="flex flex-col sm:flex-row gap-8">
+        <div className="w-full sm:w-1/2">
+          <img src={product.image} alt="Product" className="max-w-full rounded-lg" />
+        </div>
+        <div className="w-full sm:w-1/2">
+          <h1 className="text-4xl font-semibold mb-4">{product.name}</h1>
+          <p className="text-xl mb-4">${product.price}</p>
+          <p className="mb-4">{product.description}</p>
+          <div className="flex items-center gap-4 mb-4">
+            <span>Category:</span>
+            <label>
+              <input type="checkbox" value="XS" className="mr-2" />
+              XS
+            </label>
+            <label>
+              <input type="checkbox" value="S" className="mr-2" />
+              S
+            </label>
+            <label>
+              <input type="checkbox" value="M" className="mr-2" />
+              M
+            </label>
+            <label>
+              <input type="checkbox" value="L" className="mr-2" />
+              L
+            </label>
+            <label>
+              <input type="checkbox" value="XL" className="mr-2" />
+              XL
+            </label>
+          </div>
+          <div className="mb-4">
+            <span>Colors:</span>
+            <button className="ml-2 mr-2 border px-4 py-2">Black</button>
+            <button className="mr-2 border px-4 py-2">White</button>
+            <button className="mr-2 border px-4 py-2">Red</button>
+            <button className="mr-2 border px-4 py-2">Blue</button>
+            <button className="border px-4 py-2">Green</button>
+          </div>
+          <div className="flex items-center gap-4 mt-4">
+            <button onClick={handleDecrease} className="border p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5 10a1 1 0 012 0v2h6v-2a1 1 0 112 0v2a1 1 0 01-1 1H6a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <span className="text-xl">{quantity}</span>
+            <button onClick={handleIncrease} className="border p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v4h4a1 1 0 010 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V6a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <button className="bg-blue-500 text-white px-4 py-2 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M3 3.75A1.75 1.75 0 014.75 2h10.5A1.75 1.75 0 0117 3.75V5H3V3.75zM2 6v9.25A1.75 1.75 0 003.75 17h12.5A1.75 1.75 0 0018 15.25V6H2zm9 6a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5A.75.75 0 0111 12zm-6 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H5.75A.75.75 0 015 12zm6-3a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5A.75.75 0 0111 9zm-6 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H5.75A.75.75 0 015 9zm6-3a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5h-1.5A.75.75 0 0111 6zm-6 0a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H5.75A.75.75 0 015 6z" />
+              </svg>
+              Add To Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

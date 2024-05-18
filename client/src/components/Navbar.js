@@ -1,120 +1,46 @@
-import React from "react";
-import { AppBar, Toolbar, Box, Typography, styled, alpha } from "@mui/material";
-import InputBase from "@mui/material/InputBase";
-
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-
-const CustomToolBar = styled(Toolbar)({
-  display: "flex",
-  justifyContent: "space-around",
-  alignItems: "center",
-});
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  // padding: theme.spacing(0, 2),
-  height: "100%",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "end",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import UserContext from "../Context/UserContext";
 
 export const Navbar = () => {
+  const { logout } = useContext(UserContext)
+  const userId = localStorage.getItem("userId");
+
   return (
-    <AppBar sx={{ boxShadow: "none" }}>
-      <CustomToolBar>
-        <Typography
-          variant="h1"
-          noWrap
-          component="div"
-          sx={{ display: { xs: "none", sm: "block" } }}
-        >
-          <Link
-            to="/"
-            style={{
-              textDecoration: "none",
-              color: "black",
-            }}
-          >
-            Atelier
-          </Link>
-        </Typography>
-        <Search>
-          <StyledInputBase
-            placeholder="Search for products"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <IconButton
-            sx={{
-              padding: ".375rem .75rem",
-              borderRadius: "0",
-              margin: "15px",
-            }}
-            size="large"
-            aria-label="show 4 new mails"
-            color="inherit"
-          >
-            <Badge badgeContent={4} color="error">
-              <FavoriteIcon color="secondary" />
-            </Badge>
-          </IconButton>
-          <IconButton
-            sx={{
-              padding: ".375rem .75rem",
-              borderRadius: "0",
-              margin: "15px",
-            }}
-            size="large"
-            aria-label="show 17 new notifications"
-            color="inherit"
-          >
-            <Badge badgeContent={17} color="error">
-              <ShoppingCartIcon color="secondary" />
-            </Badge>
-          </IconButton>
-        </Box>
-      </CustomToolBar>
-    </AppBar>
+    <div className="navbar bg-base-100">
+      <div className="flex-1">
+        <Link to='/' className="btn btn-ghost text-xl">Atelier</Link>
+      </div>
+      <div className="flex-none gap-2">
+        <div className="form-control">
+          <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
+        </div>
+        {userId ?
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+            <div className="indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+              <span className="badge badge-sm indicator-item">8</span>
+            </div>
+          </div>
+          : ""}
+        <div className="dropdown dropdown-end">
+          {userId ? <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+            <div className="w-10 rounded-full">
+              <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            </div>
+          </div> : ""}
+          <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+            <li>
+              <Link to={`/user/${userId}`} className="justify-between">
+                Profile
+                <span className="badge">New</span>
+              </Link>
+            </li>
+            <li><a>Settings</a></li>
+            <li><a onClick={() => logout()}>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 };

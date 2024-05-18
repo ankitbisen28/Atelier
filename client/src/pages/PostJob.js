@@ -1,36 +1,14 @@
-import {
-  Container,
-  Typography,
-  TextField,
-  Box,
-  Grid,
-  Button,
-  styled,
-  Alert,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from "@mui/material";
 import React, { useContext, useState } from "react";
-import Cloths from "../utils/Cloths.json";
-import { ClothList } from "../components/ClothList";
-import { Input } from "@mui/material";
 import axios from "axios";
-import UserContext from "../Context/UserContext";
-import state from "../utils/State.json";
-import { StateList } from "../components/StateList";
 import { useFormik } from "formik";
-import { postJobSchema } from "../Schema";
-import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
-import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
+import { postJobSchema } from "../Schema"; // Make sure this is properly imported
+import UserContext from "../Context/UserContext";
 import JobContext from "../Context/JobContext";
 
 export const PostJob = () => {
   const { HeaderTypeTwo } = useContext(UserContext);
   const { categories } = useContext(JobContext);
-
   const [open, setOpen] = useState(false);
 
   const initialValues = {
@@ -38,7 +16,6 @@ export const PostJob = () => {
     description: '',
     rich: '',
     brand: '',
-    
     price: '',
     category: '',
     countInStock: '',
@@ -49,167 +26,152 @@ export const PostJob = () => {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
     useFormik({
       initialValues: initialValues,
-      // validationSchema: postJobSchema,
+      validationSchema: postJobSchema,
       onSubmit: async (values, action) => {
-        // console.log({ 
-        //   fileName: values.file.name, 
-        //   type: values.file.type,
-        //   size: `${values.file.size} bytes`
-        // })
-        console.log(values)
         try {
-          const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/products`, values, {
-            headers: HeaderTypeTwo,
-          });
+          const response = await axios.post(
+            `${import.meta.env.VITE_API_URI}/api/v1/products`,
+            values,
+            { headers: HeaderTypeTwo }
+          );
           console.log(response);
           action.resetForm();
           setOpen(true);
         } catch (error) {
-            console.log(error)
+          console.log(error);
         }
-      
       },
     });
 
-  // console.log(values);
-
-  const ErrorTypography = styled(Typography)({
-    color: "red",
-  });
-
-  const cloth = Cloths.clothes;
-
   return (
-    <Grid container width={"70%"} margin={"auto"} mt={7} spacing={2}>
-      <Grid item xs={12}>
-        <Typography variant="h4" textAlign={"center"} gutterBottom>
-          Post Job
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
+    <div className="container mx-auto mt-16">
+      <div className="w-3/4 mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-8">Post Job</h2>
         <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700">Name</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="text"
                 name="name"
-                label="Name"
                 value={values.name}
                 onChange={handleChange}
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Description</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="text"
                 name="description"
-                label="Description"
                 value={values.description}
                 onChange={handleChange}
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Rich Text</label>
+              <textarea
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
                 name="rich"
-                label="Rich Text"
                 value={values.rich}
                 onChange={handleChange}
-                multiline
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Brand</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="text"
                 name="brand"
-                label="Brand"
                 value={values.brand}
                 onChange={handleChange}
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                
+            </div>
+            <div>
+              <label className="block text-gray-700">Image</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
                 type="file"
-                
-                onChange={(event) => {
-                  setFieldValue("image", event.currentTarget.files[0])}}
+                onChange={(event) => { setFieldValue("image", event.currentTarget.files[0]) }}
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Price</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="number"
                 name="price"
-                label="Price"
                 value={values.price}
                 onChange={handleChange}
-                type="number"
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  name="category"
-                  value={values.category}
-                  onChange={handleChange}
-                >
-                  {categories.map((category) =>{return (
-                    <MenuItem key={category._id} value={category._id}>
-                      {category.name}
-                    </MenuItem>
-                  )})}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Category</label>
+              <select
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                name="category"
+                value={values.category}
+                onChange={handleChange}
+                required
+              >
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-700">Count In Stock</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="number"
                 name="countInStock"
-                label="Count In Stock"
                 value={values.countInStock}
                 onChange={handleChange}
-                type="number"
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Rating</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="number"
                 name="rating"
-                label="Rating"
                 value={values.rating}
                 onChange={handleChange}
-                type="number"
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+            </div>
+            <div>
+              <label className="block text-gray-700">Number of Reviews</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="number"
                 name="numReview"
-                label="Number of Reviews"
                 value={values.numReview}
                 onChange={handleChange}
-                type="number"
                 required
               />
-            </Grid>
-          </Grid>
-          <Box display={"flex"} mt={3} flexDirection={"column"} alignItems={"center"}>
-
-            <Button type="submit" variant="contained" color="primary">
+            </div>
+          </div>
+          <div className="flex justify-center mt-6">
+            <button
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
+              type="submit"
+            >
               Submit
-            </Button>
-          </Box>
+            </button>
+          </div>
         </form>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 };

@@ -1,10 +1,7 @@
-import { Box, Typography, TextField, Button, styled } from "@mui/material";
 import React, { useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import { useFormik } from "formik";
-
 import state from "../utils/State.json";
 import UserContext from "../Context/UserContext";
 import { StateList } from "../components/StateList";
@@ -12,7 +9,6 @@ import { userDetailsSchema } from "../Schema";
 
 export const UserDetail = () => {
   const navigate = useNavigate();
-
   const { HeaderTypeTwo } = useContext(UserContext);
 
   const initialValues = {
@@ -37,151 +33,123 @@ export const UserDetail = () => {
     initialValues: initialValues,
     validationSchema: userDetailsSchema,
     onSubmit: async (values, action) => {
-      const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/user/profile/create`, values, {
-        headers: HeaderTypeTwo,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URI}/api/user/profile/create`,
+        values,
+        { headers: HeaderTypeTwo }
+      );
       action.resetForm();
       navigate("/");
-      // console.log(response);
     },
   });
 
-  const ErrorTypography = styled(Typography)({
-    color: "red",
-  });
-
   return (
-    <Box
-      mt={15}
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Typography fontSize={30}>Please Fill Your Details</Typography>
-      <form onSubmit={handleSubmit}>
-        <Box display="flex" flexDirection="row">
-          <Box>
-            <TextField
+    <div className="mt-24 flex flex-col items-center">
+      <h1 className="text-3xl mb-8">Please Fill Your Details</h1>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2">
+            <input
+              type="text"
               name="first_name"
-              id="firstName"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="First Name"
-              variant="outlined"
-              color="primary"
+              placeholder="First Name"
               value={values.first_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.first_name && errors.first_name ? (
-              <ErrorTypography fontSize={13}>
-                {errors.first_name}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
+            {touched.first_name && errors.first_name && (
+              <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>
+            )}
+          </div>
+          <div className="w-full md:w-1/2">
+            <input
+              type="text"
               name="last_name"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Last Name"
-              variant="outlined"
-              color="primary"
+              placeholder="Last Name"
               value={values.last_name}
               onChange={handleChange}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.last_name && errors.last_name ? (
-              <ErrorTypography fontSize={13}>
-                {errors.last_name}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="row">
-          <Box>
-            <TextField
+            {touched.last_name && errors.last_name && (
+              <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-1/2">
+            <input
+              type="text"
               name="phone"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Phone"
-              variant="outlined"
-              color="primary"
+              placeholder="Phone"
               value={values.phone}
               onChange={handleChange}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.phone ? (
-              <ErrorTypography fontSize={13}>{errors.phone}</ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
-            <TextField
+            {touched.phone && errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
+          </div>
+          <div className="w-full md:w-1/2">
+            <input
+              type="text"
               name="address"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Address"
-              variant="outlined"
-              color="primary"
+              placeholder="Address"
               value={values.address}
               onChange={handleChange}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.address && errors.address ? (
-              <ErrorTypography fontSize={13}>{errors.address}</ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="row">
+            {touched.address && errors.address && (
+              <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row">
           <StateList
             values={values}
             errors={errors}
             state={state}
             handleChange={handleChange}
           />
-          <Box>
-            <TextField
+          <div className="w-full md:w-1/3">
+            <input
+              type="text"
               name="post_code"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Zip Code"
-              variant="outlined"
-              color="primary"
+              placeholder="Zip Code"
               value={values.post_code}
               onChange={handleChange}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.post_code && errors.post_code ? (
-              <ErrorTypography fontSize={13}>
-                {errors.post_code}
-              </ErrorTypography>
-            ) : null}
-          </Box>
-          <Box>
+            {touched.post_code && errors.post_code && (
+              <p className="text-red-500 text-sm mt-1">{errors.post_code}</p>
+            )}
+          </div>
+          <div className="w-full md:w-1/3">
             <input
-              name="image"
-              id="image"
               type="file"
-              style={{ margin: "2rem 1rem 0 0" }}
-              label="Image"
-              variant="outlined"
-              color="primary"
+              name="image"
               onChange={(event) => {
                 setFieldValue("image", event.currentTarget.files[0]);
               }}
               onBlur={handleBlur}
+              className="w-full p-3 border border-gray-300 rounded"
             />
-            {touched.image && errors.image ? (
-              <ErrorTypography fontSize={13}>{errors.image}</ErrorTypography>
-            ) : null}
-          </Box>
-        </Box>
-        <Button
-          fullWidth
+            {touched.image && errors.image && (
+              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+            )}
+          </div>
+        </div>
+        <button
           type="submit"
-          size="large"
-          style={{ margin: "2rem 1rem 0 0" }}
-          variant="contained"
+          className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Save
-        </Button>
+        </button>
       </form>
-    </Box>
+    </div>
   );
 };
