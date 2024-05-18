@@ -13,7 +13,7 @@ Whether you're craving a savory meal or just exploring our demo project, our Rea
 
 ## Website look like this
 
-![App Screenshot](https://firebasestorage.googleapis.com/v0/b/food-web-app-d840c.appspot.com/o/Screenshot%20from%202023-07-04%2008-51-29.png?alt=media&token=e5186d1e-ee80-4c08-86ec-0818379696f0)
+![App Screenshot](image.png)
 
 
 ## Run Locally 
@@ -24,31 +24,12 @@ Clone the project
   git clone git@github.com:ankitbisen28/Food-order-app.git
 ```
 
-Go client Folder 
-```   
-  cd client
-```
-
-Install Fontend dependencies
+Install dependencies
 
 ```bash
   npm install
 ```
 
-## Open another Terminal 
-Open another Terminal For Backend 
-
-Go Backend Folder 
-```   
-  cd backend
-```
-
-Install backend dependencies
-
-```bash
-  npm install
-```
-## Open Root Terminal
 Start your server on root
 
 ```bash
@@ -56,7 +37,7 @@ Start your server on root
 ```
 ## 🚀 About Me
 Hello Everyone, 
- Hi, I'm Ankit Bisen, a 21-year-old Software Development Student with a bachelor of Vocational in Software development and experience with MERN Stack Development. 
+ Hi, I'm Ankit Bisen, a 21-year-old Graduated Software Development Student in a bachelor of Vocational in Software development and experience with MERN Stack Development and Devops. 
 
 
 ## 🔗 Links
