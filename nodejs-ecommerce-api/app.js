@@ -12,35 +12,32 @@ const authJwt = require('./helpers/jwt');
 const errorHandler = require('./helpers/error-handler');
 
 app.use(cors());
-app.options('*',cors());
+app.options('*', cors());
 
 // Middlewares
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 app.use(authJwt());
-app.use('/public/uploads', express.static( __dirname + '/public/uploads'));
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
 app.use(errorHandler);
 
 const api = process.env.API_URL;
 const categoriesRoute = require('./routes/categories');
-const productRoute = require('./routes/products');
+const projects = require('./routes/projects.js');
 const userRoute = require('./routes/users');
 const orderRoute = require('./routes/orders');
 
 // Routes
-
-app.use(`${api}/products`, productRoute);
+app.use(`${api}/projects`, projects);
 app.use(`${api}/categories`, categoriesRoute);
 app.use(`${api}/users`, userRoute);
 app.use(`${api}/orders`, orderRoute);
 
-const dbConfig = require('./config/database.config.js');
-
 mongoose.Promise = global.Promise;
 
 // Connecting to the database
-mongoose.connect(dbConfig.url, {
+mongoose.connect(process.env.DATABASE_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false

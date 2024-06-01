@@ -8,23 +8,23 @@ require('dotenv/config');
 
 const JWT_SECRET = process.env.secret;
 
-router.get('/', async (req, res) =>{
+router.get('/', async (req, res) => {
     const userList = await User.find().select('-passwordHash');
 
-    if(!userList) {
-        res.status(500).json({success:false})
+    if (!userList) {
+        res.status(500).json({ success: false })
     }
     res.send(userList);
 })
 
-router.get ('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const user = await User.findById(req.params.id).select('-passwordHash');
 
     if (!user) {
         res.status(500).json({ success: false, message: 'The user with the given ID not exists' })
     }
     res.status(200).send(user)
-    
+
 })
 
 router.post('/register', async (req, res) => {
@@ -46,10 +46,10 @@ router.post('/register', async (req, res) => {
     if (!user)
         return res.status(404).send('User cannot be created')
 
-     // Generate JWT token for the registered user
-     const token = jwt.sign({ username: user.email }, JWT_SECRET, { expiresIn: '1d' });
+    // Generate JWT token for the registered user
+    const token = jwt.sign({ username: user.email }, JWT_SECRET, { expiresIn: '1d' });
 
-     res.status(201).json({ user: user.id, token });
+    res.status(201).json({ user: user.id, token });
     // res.send(user);
 })
 
@@ -66,19 +66,19 @@ router.delete('/:id', (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const user = await User.findOne({ email: req.body.email})
+    const user = await User.findOne({ email: req.body.email })
     const secret = process.env.secret;
 
-    if(!user) {
+    if (!user) {
         return res.status(400).send('User with given Email not found');
     }
 
-    if(user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
+    if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
         const token = jwt.sign({
             userID: user.id,
-            isAdmin : user.isAdmin
-        }, secret, {expiresIn : '1d'} )
-        res.status(200).json({user: user.id, token: token});
+            isAdmin: user.isAdmin
+        }, secret, { algorithm: 'HS256', expiresIn: '5d' })
+        res.status(200).json({ user: user.id, token: token });
     } else {
         res.status(400).send('Password is mismatch');
     }

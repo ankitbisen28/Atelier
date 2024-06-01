@@ -1088,7 +1088,7 @@ bluebird@3.5.1:
   resolved "https://registry.npmjs.org/bluebird/-/bluebird-3.5.1.tgz"
   integrity sha512-MKiLiV+I1AA596t9w1sQJ8jkiSr5+ZKi0WKrYGUn6d1Fx+Ij4tIj+m2WMQSGczs5jZVxV339chE8iwk6F64wjA==
 
-body-parser@^1.19.0, body-parser@1.20.2:
+body-parser@1.20.2:
   version "1.20.2"
   resolved "https://registry.npmjs.org/body-parser/-/body-parser-1.20.2.tgz"
   integrity sha512-ml9pReCu3M61kGlqoTm2umSXTlRTuGTx0bfYj+uIUKKYycG5NtSbeetV3faSU6R7ajOPw0g/J1PvK4qNy7s5bA==
@@ -1271,12 +1271,8 @@ classnames@^2.2.5, classnames@^2.2.6:
   version "0.1.0"
   resolved "file:client"
   dependencies:
-    "@emotion/react" "^11.11.4"
-    "@emotion/styled" "^11.11.0"
     "@fontsource/roboto" "^5.0.12"
     "@mui/icons-material" "^5.15.14"
-    "@mui/material" "^5.15.14"
-    "@mui/styled-engine-sc" "^5.14.12"
     "@testing-library/jest-dom" "^6.4.2"
     "@testing-library/react" "^14.2.2"
     "@testing-library/user-event" "^14.5.2"
@@ -1289,7 +1285,6 @@ classnames@^2.2.5, classnames@^2.2.6:
     react-material-ui-carousel "^3.4.2"
     react-responsive-carousel "^3.2.23"
     react-router-dom "^6.22.3"
-    styled-components "^6.1.8"
     vite "^5.2.7"
     vite-plugin-svgr "^4.2.0"
     vite-tsconfig-paths "^4.3.2"
@@ -2971,7 +2966,6 @@ node-releases@^2.0.14:
   resolved "file:nodejs-ecommerce-api"
   dependencies:
     bcryptjs "^2.4.3"
-    body-parser "^1.19.0"
     cors "^2.8.5"
     dotenv "^8.2.0"
     express "^4.17.1"
@@ -4215,6 +4209,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"

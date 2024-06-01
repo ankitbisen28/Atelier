@@ -1,4 +1,4 @@
-const jwt  = require('express-jwt');
+const jwt = require('express-jwt');
 
 function authJwt() {
     const secret = process.env.secret;
@@ -6,28 +6,27 @@ function authJwt() {
     return jwt({
         secret,
         algorithms: ['HS256'],
-        isRevoked : isRevoked
+        isRevoked: isRevoked
     }).unless({
         path: [
-            {url: /\/public\/uploads(.*)/, methods: ['GET', 'OPTIONS'] },
-            {url: /\/api\/v1\/products(.*)/, methods: ['GET', 'OPTIONS']},
-            {url: /\/api\/v1\/categories(.*)/, methods: ['GET', 'OPTIONS']},
-            { url: /\/api\/v1\/categories\/[0-9a-fA-F]{24}/, methods: ['GET', 'PUT', 'DELETE'] },
-            { url: /\/api\/v1\/users\/[0-9a-fA-F]{24}/, methods: ['GET', 'DELETE'] },
+            { url: /\/public\/uploads(.*)/, methods: ['GET', 'OPTIONS'] },
+            { url: /\/api\/v1\/projects(.*)/, methods: ['GET', 'OPTIONS', 'POST', 'DELETE', 'PUT'] },
+            { url: /\/api\/v1\/categories(.*)/, methods: ['GET', 'OPTIONS', 'POST', 'DELETE', 'PUT'] },
+            { url: /\/api\/v1\/users\/[0-9a-fA-F]{24}/, methods: ['GET', 'DELETE', 'POST', 'DELETE', 'PUT'] },
             `${api}/users/login`,
             `${api}/users/register`,
             `${api}/orders`,
             `${api}/users`,
             `${api}/categories`,
-            `${api}/products`,
+            `${api}/projects`,
         ]
     })
 }
 
-async function isRevoked (req, payload, done){
-    if(!payload.isAdmin){
-        done(null, true)
-    } 
+async function isRevoked(req, payload, done) {
+    if (!payload.isAdmin) {
+       return done(null, true)
+    }
 
     done();
 }

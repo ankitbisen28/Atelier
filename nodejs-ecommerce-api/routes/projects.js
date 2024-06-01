@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 
-const Product = require('../models/product');
+const Project = require('../models/project');
 const Category = require('../models/category');
 
 const FILE_TYPE_MAP = {
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const isValid = FILE_TYPE_MAP[file.mimetype];
         let uploadError = new Error('Invalid Image Type');
-        if(isValid){
+        if (isValid) {
             uploadError = null
         }
         cb(uploadError, 'public/uploads')
@@ -28,71 +28,75 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload  = multer({ storage: storage })
+const upload = multer({ storage: storage })
 
-router.get('/', async (req, res)=> {
+router.get('/', async (req, res) => {
 
     let filter = {};
-    if(req.query.categories)
-    {
-        filter = {category: req.query.categories.split(',')}
+    if (req.query.categories) {
+        filter = { category: req.query.categories.split(',') }
     }
 
-    const productList = await Product.find(filter).populate('category');
-    // const productList = await Product.find(filter).select('name image');
-    if (!productList) {
-        res.status(500), json({success:false})
+    const projectList = await Project.find(filter).populate('category');
+    // const productList = await Project.find(filter).select('name image');
+    if (!projectList) {
+        res.status(500), json({ success: false })
     }
-    res.status(200).send(productList);
+    res.status(200).send(projectList);
 })
 
 router.get('/:id', async (req, res) => {
-    const product = await Product.findById(req.params.id).populate('category');
+    const project = await Project.findById(req.params.id).populate('category');
 
-    if (!product) {
+    if (!project) {
         res.status(500).json({ success: false, message: 'The product with the given ID not exists' })
     }
-    res.status(200).send(product)
+    res.status(200).send(project)
 })
 
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', upload.array('images', 5), async (req, res) => {
+    try {
+        if (!mongoose.isValidObjectId(req.body.consumerId)) {
+            return res.status(400).send('Invalid Consumer ID');
+        }
 
-    if(!mongoose.isValidObjectId(req.params.id)){
-        res.status(400).send('Invalid Product ID')
+        const category = await Category.findById(req.body.category);
+        if (!category) {
+            return res.status(400).send('Invalid Category');
+        }
+
+        const files = req.files;
+        if (!files || files.length === 0) {
+            return res.status(400).send('No image in the request');
+        }
+
+        const images = files.map(file => ({
+            url: `${req.protocol}://${req.get('host')}/public/uploads/${file.filename}`,
+            description: file.originalname,
+            uploadedAt: Date.now()
+        }));
+
+        const project = new Project({
+            title: req.body.title,
+            description: req.body.description,
+            requirements: req.body.requirements,
+            budget: req.body.budget,
+            deadline: req.body.deadline,
+            consumerId: req.body.consumerId,
+            category: req.body.category,
+            images: images
+        });
+
+        const savedProject = await project.save();
+        if (!savedProject) {
+            return res.status(500).send('Project cannot be created');
+        }
+
+        res.send(savedProject);
+    } catch (error) {
+        res.status(500).send('An error occurred: ' + error.message);
     }
-
-    const category = await Category.findById(req.body.category);
-    if (!category)
-        return res.status(400).send('Invalid Category')
-
-    const file = req.file;
-    if (!file)
-        return res.status(400).send('No image in the request')
-
-    const fileName = file.filename;
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
-
-    let product = new Product({
-        name: req.body.name,
-        description: req.body.description,
-        richDescription: req.body.richDescription,
-        image: `${basePath}${fileName}`,
-        brand: req.body.brand,
-        price: req.body.price,
-        category: req.body.category,
-        countInStock: req.body.countInStock,
-        rating: req.body.rating,
-        numReviews: req.body.numReviews,
-        isFeatured: req.body.isFeatured
-    })
-
-    product = await product.save();
-
-    if (!product)
-        return res.status(500).send('Product cannot be created')
-
-    res.send(product);
-})
+});
 
 router.put('/:id', async (req, res) => {
 
@@ -100,7 +104,7 @@ router.put('/:id', async (req, res) => {
     if (!category)
         return res.status(400).send('Invalid Category')
 
-    const product = await Product.findByIdAndUpdate(req.params.id, {
+    const project = await Project.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
@@ -116,14 +120,14 @@ router.put('/:id', async (req, res) => {
         new: true
     })
 
-    if (!product)
+    if (!project)
         return res.status(500).send('Product cannot be updated')
-    res.send(product);
+    res.send(project);
 })
 
 router.delete('/:id', (req, res) => {
-    Product.findByIdAndRemove(req.params.id).then(product => {
-        if (product) {
+    Project.findByIdAndRemove(req.params.id).then(project => {
+        if (project) {
             return res.status(200).json({ success: true, message: 'Product deleted successfully' })
         } else {
             return res.status(404).json({ success: false, message: 'Product cannot find' })
@@ -134,22 +138,22 @@ router.delete('/:id', (req, res) => {
 })
 
 router.get('/get/count', async (req, res) => {
-    const productCount = await Product.countDocuments((count)=>count);
-    if (!productCount) {
+    const projectCount = await Project.countDocuments((count) => count);
+    if (!projectList) {
         res.status(500), json({ success: false })
     }
     res.status(200).send({
-        productCount: productCount
+        projectCount: projectList
     });
 })
 
 router.get('/get/featured/:count', async (req, res) => {
-    const count = req.params.count ? req.params.count: 0
-    const products = await Product.find({ isFeatured: true}).limit(+count);
-    if (!products) {
+    const count = req.params.count ? req.params.count : 0
+    const projects = await Project.find({ isFeatured: true }).limit(+count);
+    if (!projects) {
         res.status(500), json({ success: false })
     }
-    res.status(200).send(products);
+    res.status(200).send(projects);
 })
 
 router.put('/gallery-images/:id', upload.array('images', 10), async (req, res) => {
@@ -161,23 +165,23 @@ router.put('/gallery-images/:id', upload.array('images', 10), async (req, res) =
     const files = req.files;
     let imagesPaths = [];
     const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`;
-    if(files){
+    if (files) {
         files.map(file => {
             imagesPaths.push(`${basePath}${file.fileName}`);
         })
     }
 
-    const product = await Product.findByIdAndUpdate(req.params.id, {
+    const project = await Project.findByIdAndUpdate(req.params.id, {
 
         image: imagesPaths,
     },
-    {
-        new: true
-    })
+        {
+            new: true
+        })
 
-    if (!product)
+    if (!project)
         return res.status(500).send('Product cannot be updated')
-    res.send(product);
+    res.send(project);
 })
 
 module.exports = router;
