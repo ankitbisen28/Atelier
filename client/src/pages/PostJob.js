@@ -30,7 +30,7 @@ export const PostJob = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URI}/api/v1/products`,
+            `${import.meta.env.VITE_API_URI}/api/v1/projects`,
             values,
             { headers: HeaderTypeTwo }
           );

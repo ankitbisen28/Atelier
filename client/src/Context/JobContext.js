@@ -6,6 +6,7 @@ export const JobContext = createContext(null);
 
 export const JobContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
+  // console.log(jobs)
   const [categories, setCategories] = useState([]);
 
   const { headers, HeaderTypeTwo } = useContext(UserContext);
@@ -13,7 +14,7 @@ export const JobContextProvider = ({ children }) => {
 
   const ListJob = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/products`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects`, {
           headers: HeaderTypeTwo,
         });
         setJobs(response.data);

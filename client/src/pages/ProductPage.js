@@ -2,16 +2,18 @@ import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import UserContext from '../Context/UserContext';
+import { Carousel } from "react-responsive-carousel";
 
 const ProductPage = () => {
   const { id, HeaderTypeTwo } = useParams();
   const { token } = useContext(UserContext);
   const [product, setProduct] = React.useState({});
+  console.log(product)
   const [quantity, setQuantity] = React.useState(1);
 
   const getProductDetail = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/products/${id}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects/${id}`, {
         headers: HeaderTypeTwo,
       });
       setProduct(response.data);
@@ -38,7 +40,27 @@ const ProductPage = () => {
     <div className="container mx-auto mt-16 px-4">
       <div className="flex flex-col sm:flex-row gap-8">
         <div className="w-full sm:w-1/2">
-          <img src={product.image} alt="Product" className="max-w-full rounded-lg" />
+          {product.images && product.images.length > 0 && (
+            <Carousel
+              showThumbs={false}
+              showStatus={false}
+              infiniteLoop={true}
+              autoPlay={true}
+              interval={3000}
+              className="w-full h-[70vh]"
+            >
+              {product.images.map((image, i) => (
+                <div key={i} className="relative w-full h-[70vh]">
+                  <img
+                    className="object-cover w-full h-full"
+                    alt={`image-${i + 1}`}
+                    src={image.url}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          )}
+
         </div>
         <div className="w-full sm:w-1/2">
           <h1 className="text-4xl font-semibold mb-4">{product.name}</h1>
