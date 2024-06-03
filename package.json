@@ -7,10 +7,10 @@
   "private": true,
   "workspaces": [
     "client",
-    "nodejs-ecommerce-api"
+    "server"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace client start\" \"yarn workspace nodejs-ecommerce-api run start\""
+    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run start\""
   },
   "dependencies": {
     "@emotion/styled": "^11.11.5",
