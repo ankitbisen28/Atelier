@@ -19,6 +19,7 @@ export const Register = () => {
     zip: '',
     city: '',
     country: '',
+    userType: ''
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -178,6 +179,17 @@ export const Register = () => {
             </select>
             {touched.country && errors.country && (
               <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+            )}
+          </div>
+          <div>
+            <div className='flex flex-row items-center'>
+              <p className='m-3'>Consumer</p>
+              <input type="radio" name="userType" value='Consumer' onChange={handleChange} className="radio radio-primary" />
+              <p className='m-3'>Maker</p>
+              <input type="radio" name="userType" value='Maker' onChange={handleChange} className="radio radio-primary" />
+            </div>
+            {touched.userType && errors.userType && (
+              <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
             )}
           </div>
         </div>

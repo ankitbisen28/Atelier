@@ -38,7 +38,8 @@ router.post('/register', async (req, res) => {
         apartment: req.body.apartment,
         zip: req.body.zip,
         city: req.body.city,
-        country: req.body.country
+        country: req.body.country,
+        userType: req.body.userType
     })
 
     user = await user.save();
