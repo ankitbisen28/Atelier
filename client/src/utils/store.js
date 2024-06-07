@@ -8,11 +8,19 @@ const useAppStore = create(
         (set, get) => ({
             cart: [],
             fav: [],
-            addToCart:(elem)=>{
+            token: null,
+            userId: null,
+            setToken: (token) => {
+                set({ token })
+            },
+            setUserId: (userId) => {
+                set({ userId })
+            },
+            addToCart: (elem) => {
                 if (cart.length < 1) {
-                    set({cart:[...state.cart , elem]});
+                    set({ cart: [...state.cart, elem] });
                 }
-                else{
+                else {
                     state.cart.forEach(element => {
                         // element logic 
                         // compare with product id
@@ -28,4 +36,4 @@ const useAppStore = create(
     ),
 )
 
-export {useAppStore}
+export { useAppStore }

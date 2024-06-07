@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import axios from "axios";
 import { loginSchema } from "../Schema";
 import { useAppStore } from "../utils/store";
+import { toast } from 'react-toastify'
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { cart } = useAppStore((state) => ({ cart: state.cart }));
+  const { token, setToken, setUserId, userId } = useAppStore((state) => ({ cart: state.cart, token: state.token, setToken: state.setToken, setUserId: state.setUserId, userId: state.userId }));
 
   const initialValues = {
     email: "",
@@ -24,17 +25,22 @@ export const Login = () => {
             `${import.meta.env.VITE_API_URI}/api/v1/users/login`,
             values
           );
-          localStorage.setItem("userId", response.data.user);
-          const token = response.data.token; // Assuming the server returns a token upon successful login
-          localStorage.setItem("token", token);
-          navigate("/");
+          setToken(response.data.token);
+          setUserId(response.data.user)
+          toast.success(`Logged in`);
         } catch (error) {
-          console.error("Login failed:", error);
+          toast.error(`Login failed: ${error.response.data}`);
         }
       },
     });
 
-  return (
+  useEffect(() => {
+    if (token !== null) {
+      navigate('/');
+    }
+  }, [token])
+
+  return (<>
     <div className="flex justify-center items-center h-screen">
       <div className="w-full max-w-xs">
         <div className="flex flex-col items-center">
@@ -111,5 +117,6 @@ export const Login = () => {
         </form>
       </div>
     </div>
+  </>
   );
 };

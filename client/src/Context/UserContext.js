@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAppStore } from "../utils/store";
 
 export const UserContext = createContext(null);
 
@@ -13,8 +15,7 @@ export const UserContextProvider = ({ children }) => {
   );
   const navigate = useNavigate();
 
-  // console.log(userDetails);
-  const token = localStorage.getItem("token");
+  const { token, setToken, setUserId } = useAppStore((state) => ({ token: state.token, setToken: state.setToken, setUserId: state.setUserId }));
 
   const headers = {
     "Content-Type": "application/json",
@@ -26,30 +27,12 @@ export const UserContextProvider = ({ children }) => {
     Authorization: `bearer ${token}`,
   };
 
-  // const fetchUserDetails = async () => {
-  //   try {
-  //     if (token) {
-  //       const response = await axios.get("/api/user/profiles", {
-  //         headers: headers,
-  //       });
-  //       localStorage.setItem("userDetails", JSON.stringify(response.data));
-  //       setuserDetails(JSON.parse(localStorage.getItem("userDetails")));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching user details:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchUserDetails();
-  //   // UserImage();
-  //   // eslint-disable-next-line
-  // }, [token, userDetails]);
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
+    setToken(null)
+    setUserId(null)
     navigate("/login");
+    toast.success("Log out user")
   };
 
   const value = {

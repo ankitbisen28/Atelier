@@ -14,6 +14,8 @@ import { PostJob } from "./pages/PostJob";
 import JobList from "./pages/ListJob";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import ProductPage from "./pages/ProductPage";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
         <UserContextProvider>
           <JobContextProvider>
             <Navbar />
+            <ToastContainer />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

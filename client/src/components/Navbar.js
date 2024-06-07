@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../Context/UserContext";
+import { useAppStore } from "../utils/store";
 
 export const Navbar = () => {
   const { logout } = useContext(UserContext)
-  const userId = localStorage.getItem("userId");
+  const { userId } = useAppStore((state) => ({ userId: state.userId }));
 
   return (
     <div className="navbar bg-base-100">
