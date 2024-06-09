@@ -5,9 +5,13 @@ import axios from 'axios';
 import { countries } from '../utils/countries';
 import { registerSchema } from '../Schema';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useAppStore } from '../utils/store';
+import { toast } from 'react-toastify';
 
 export const Register = () => {
   const navigate = useNavigate();
+
+  const { setToken, setUserId } = useAppStore((state) => ({ setToken: state.setToken, setUserId: state.setUserId }));
 
   const initialValues = {
     email: '',
@@ -29,12 +33,13 @@ export const Register = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, values);
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('userId', response.data.user);
+          setToken(response.data.token);
+          setUserId(response.data.user)
+          toast.success("User Registered");
           action.resetForm();
           navigate('/');
         } catch (error) {
-          alert('Please enter correct details');
+          toast.error(`Registration failed: ${error.response.data}`);
           console.error(error);
         }
       },

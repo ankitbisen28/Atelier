@@ -28,6 +28,10 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
+    // checking if user already exist 
+    const emailExist = await User.findOne({ email: req.body.email });
+    if (emailExist) return res.status(400).send("email already exists");
+
     let user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -95,6 +99,51 @@ router.get('/get/count', async (req, res) => {
     res.status(200).send({
         userCount: userCount
     });
+})
+
+router.put('/:id', async (req, res) => {
+    const { name, email, phone, apartment, street, city, zip, country, userType } = req.body;
+
+    try {
+        const user = await User.findById(req.params.id).select('-passwordHash');;
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // checking if user already exist 
+        const emailExist = await User.findOne({ email: req.body.email });
+        if (emailExist) return res.status(400).send("email already exists");
+
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        user.apartment = apartment;
+        user.street = street;
+        user.city = city;
+        user.zip = zip;
+        user.country = country;
+        user.userType = userType;
+
+        await user.save();
+
+        res.status(200).json({
+            message: 'Profile updated successfully',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                apartment: user.apartment,
+                street: user.street,
+                city: user.city,
+                zip: user.zip,
+                country: user.country,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
 })
 
 module.exports = router;

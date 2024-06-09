@@ -47,6 +47,18 @@ export const registerSchema = Yup.object({
   userType: Yup.string().required("Please Select user type")
 });
 
+export const editSchema = Yup.object({
+  name: Yup.string().min(3).required("Please enter your email"),
+  email: Yup.string().email().required("Please enter your email"),
+  phone: Yup.string().min(10).max(10).required("Please enter your phone number"),
+  street: Yup.string().max(30).required("Please enter your street name"),
+  apartment: Yup.string().max(30).required("Please enter your apartment"),
+  zip: Yup.string().max(6).required("Please enter your zip"),
+  city: Yup.string().max(10).required("Please enter your city name"),
+  country: Yup.string().max(10).required("Please Enteer your country"),
+  userType: Yup.string().required("Please Select user type")
+});
+
 export const userDetailsSchema = Yup.object({
   first_name: Yup.string()
     .min(3)

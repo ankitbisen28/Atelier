@@ -19,12 +19,12 @@ export const UserContextProvider = ({ children }) => {
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   };
 
   const HeaderTypeTwo = {
     "Content-Type": "multipart/form-data",
-    Authorization: `bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   };
 
 

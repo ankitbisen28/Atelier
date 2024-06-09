@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { token, setToken, setUserId, userId } = useAppStore((state) => ({ cart: state.cart, token: state.token, setToken: state.setToken, setUserId: state.setUserId, userId: state.userId }));
+  const { token, setToken, setUserId } = useAppStore((state) => ({ cart: state.cart, token: state.token, setToken: state.setToken, setUserId: state.setUserId }));
 
   const initialValues = {
     email: "",
