@@ -63,8 +63,8 @@ const ProductPage = () => {
 
         </div>
         <div className="w-full sm:w-1/2">
-          <h1 className="text-4xl font-semibold mb-4">{product.name}</h1>
-          <p className="text-xl mb-4">${product.price}</p>
+          <h1 className="text-4xl font-semibold mb-4">{product.title}</h1>
+          <p className="text-xl mb-4">${product.budget}</p>
           <p className="mb-4">{product.description}</p>
           <div className="flex items-center gap-4 mb-4">
             <span>Category:</span>

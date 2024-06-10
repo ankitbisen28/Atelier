@@ -84,7 +84,8 @@ router.post('/', upload.array('images', 5), async (req, res) => {
             deadline: req.body.deadline,
             consumerId: req.body.consumerId,
             category: req.body.category,
-            images: images
+            images: images,
+            status: req.body.status
         });
 
         const savedProject = await project.save();

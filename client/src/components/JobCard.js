@@ -29,7 +29,7 @@ export const JobCard = () => {
               ))}
             </Carousel>
             <div className="px-6 py-4">
-              <div className="font-bold text-black text-xl mb-2">{job.requirements}</div>
+              <div className="font-bold text-black text-xl mb-2">{job.title}</div>
               <p className="text-gray-700 text-base">${job.budget}</p>
             </div>
             <div className="px-6 pt-4 pb-2 flex items-center">

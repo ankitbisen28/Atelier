@@ -6,18 +6,18 @@ export const JobContext = createContext(null);
 
 export const JobContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
-  // console.log(jobs)
   const [categories, setCategories] = useState([]);
+  // console.log(categories)
 
   const { headers, HeaderTypeTwo } = useContext(UserContext);
   const token = localStorage.getItem("token")
 
   const ListJob = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects`, {
-          headers: HeaderTypeTwo,
-        });
-        setJobs(response.data);
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects`, {
+        headers: HeaderTypeTwo,
+      });
+      setJobs(response.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -25,10 +25,10 @@ export const JobContextProvider = ({ children }) => {
 
   const listCat = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/categories`, {headers: headers});
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/categories`, { headers: headers });
       setCategories(response.data)
     } catch (error) {
-      console.log(error.message); 
+      console.log(error.message);
     }
   }
 

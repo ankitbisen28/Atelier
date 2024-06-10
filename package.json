@@ -10,7 +10,7 @@
     "server"
   ],
   "scripts": {
-    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run start\""
+    "start": "concurrently \"yarn workspace client start\" \"yarn workspace server run dev\""
   },
   "dependencies": {
     "@emotion/styled": "^11.11.5",

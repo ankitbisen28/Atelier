@@ -1,26 +1,29 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
 import { postJobSchema } from "../Schema"; // Make sure this is properly imported
 import UserContext from "../Context/UserContext";
 import JobContext from "../Context/JobContext";
+import { useAppStore } from "../utils/store";
+import { toast } from "react-toastify";
 
 export const PostJob = () => {
   const { HeaderTypeTwo } = useContext(UserContext);
   const { categories } = useContext(JobContext);
-  const [open, setOpen] = useState(false);
+  const statuses = ['Open', 'Close', 'In progress', 'Completed']
+  const { userId } = useAppStore((state) => ({ userId: state.userId }));
+
 
   const initialValues = {
-    name: '',
+    title: '',
     description: '',
-    rich: '',
-    brand: '',
-    price: '',
+    requirements: '',
+    budget: '',
+    deadline: '',
+    consumerId: userId,
     category: '',
-    countInStock: '',
-    rating: '',
-    numReview: ''
+    images: [],
+    status: 'Open',
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } =
@@ -28,37 +31,55 @@ export const PostJob = () => {
       initialValues: initialValues,
       validationSchema: postJobSchema,
       onSubmit: async (values, action) => {
+        const formData = new FormData();
+        for (let i = 0; i < values.images.length; i++) {
+          formData.append('images', values.images[i]);
+        }
+        formData.append('title', values.title);
+        formData.append('description', values.description);
+        formData.append('requirements', values.requirements);
+        formData.append('budget', values.budget);
+        formData.append('deadline', values.deadline);
+        formData.append('consumerId', values.consumerId);
+        formData.append('category', values.category);
+        formData.append('status', values.status);
+        console.log(formData.getAll('images'))
         try {
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URI}/api/v1/projects`,
-            values,
+            `${import.meta.env.VITE_API_URI}/api/v1/projects/`,
+            formData,
             { headers: HeaderTypeTwo }
           );
           console.log(response);
           action.resetForm();
-          setOpen(true);
+          toast.success("Project form submit Successfully")
         } catch (error) {
           console.log(error);
+          toast.error(error.response.data);
         }
       },
     });
 
+  console.log(values)
+
   return (
     <div className="container mx-auto mt-16">
       <div className="w-3/4 mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8">Post Job</h2>
+        <h2 className="text-3xl font-bold text-center mb-8">Post Your Project</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-gray-700">Name</label>
+              <label className="block text-gray-700">Title</label>
               <input
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
                 type="text"
-                name="name"
-                value={values.name}
+                name="title"
+                value={values.title}
                 onChange={handleChange}
-                required
               />
+              {touched.title && errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700">Description</label>
@@ -68,49 +89,65 @@ export const PostJob = () => {
                 name="description"
                 value={values.description}
                 onChange={handleChange}
-                required
+                onBlur={handleBlur}
               />
+              {touched.description && errors.description && (
+                <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+              )}
             </div>
             <div>
-              <label className="block text-gray-700">Rich Text</label>
+              <label className="block text-gray-700">Requirements</label>
               <textarea
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
-                name="rich"
-                value={values.rich}
+                name="requirements"
+                value={values.requirements}
                 onChange={handleChange}
-                required
+                onBlur={handleBlur}
               />
+              {touched.requirements && errors.requirements && (
+                <p className="text-red-500 text-sm mt-1">{errors.requirements}</p>
+              )}
             </div>
             <div>
-              <label className="block text-gray-700">Brand</label>
-              <input
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                type="text"
-                name="brand"
-                value={values.brand}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Image</label>
-              <input
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                type="file"
-                onChange={(event) => { setFieldValue("image", event.currentTarget.files[0]) }}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Price</label>
+              <label className="block text-gray-700">Budget</label>
               <input
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
                 type="number"
-                name="price"
-                value={values.price}
+                name="budget"
+                value={values.budget}
                 onChange={handleChange}
-                required
+                onBlur={handleBlur}
               />
+              {touched.budget && errors.budget && (
+                <p className="text-red-500 text-sm mt-1">{errors.budget}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-gray-700">Images</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                name="images"
+                type="file"
+                onChange={(event) => { setFieldValue("images", event.currentTarget.files); }}
+                onBlur={handleBlur}
+              />
+              {touched.images && errors.images && (
+                <p className="text-red-500 text-sm mt-1">{errors.images}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-gray-700">Deadline</label>
+              <input
+                className="w-full mt-1 p-2 border border-gray-300 rounded"
+                type="date"
+                name="deadline"
+                value={values.deadline}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              {touched.deadline && errors.deadline && (
+                <p className="text-red-500 text-sm mt-1">{errors.deadline}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700">Category</label>
@@ -119,7 +156,7 @@ export const PostJob = () => {
                 name="category"
                 value={values.category}
                 onChange={handleChange}
-                required
+                onBlur={handleBlur}
               >
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
@@ -127,39 +164,28 @@ export const PostJob = () => {
                   </option>
                 ))}
               </select>
+              {touched.category && errors.category && (
+                <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+              )}
             </div>
             <div>
-              <label className="block text-gray-700">Count In Stock</label>
-              <input
+              <label className="block text-gray-700">Status</label>
+              <select
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
-                type="number"
-                name="countInStock"
-                value={values.countInStock}
+                name="status"
+                value={values.status}
                 onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Rating</label>
-              <input
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                type="number"
-                name="rating"
-                value={values.rating}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Number of Reviews</label>
-              <input
-                className="w-full mt-1 p-2 border border-gray-300 rounded"
-                type="number"
-                name="numReview"
-                value={values.numReview}
-                onChange={handleChange}
-                required
-              />
+                onBlur={handleBlur}
+              >
+                {statuses.map((status, index) => (
+                  <option key={index} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+              {touched.status && errors.status && (
+                <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+              )}
             </div>
           </div>
           <div className="flex justify-center mt-6">

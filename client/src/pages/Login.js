@@ -41,7 +41,7 @@ export const Login = () => {
   }, [token])
 
   return (<>
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-full">
       <div className="w-full max-w-xs">
         <div className="flex flex-col items-center">
           <div className="m-4 p-2 bg-gray-200 rounded-full">
@@ -77,9 +77,13 @@ export const Login = () => {
               name="email"
               value={values.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               autoComplete="email"
               autoFocus
             />
+            {touched.email && errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
           <div className="mb-6">
             <label
@@ -94,9 +98,13 @@ export const Login = () => {
               type="password"
               name="password"
               value={values.password}
+              onBlur={handleBlur}
               onChange={handleChange}
               autoComplete="current-password"
             />
+            {touched.password && errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <button
