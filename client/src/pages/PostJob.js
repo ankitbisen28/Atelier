@@ -60,8 +60,6 @@ export const PostJob = () => {
       },
     });
 
-  console.log(values)
-
   return (
     <div className="container mx-auto mt-16">
       <div className="w-3/4 mx-auto">

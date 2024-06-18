@@ -9,26 +9,10 @@ import { countries } from "../utils/countries";
 import { toast } from "react-toastify";
 
 
-const userData = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '+1234567890',
-  address: {
-    apartment: 'Apt 123',
-    street: '123 Main St',
-    city: 'Anytown',
-    zip: '12345',
-    country: 'USA',
-  },
-  appliedJobs: [
-    { id: 1, title: 'Software Engineer', company: 'Tech Co.' },
-    { id: 2, title: 'Data Analyst', company: 'Data Solutions Inc.' },
-    { id: 3, title: 'Web Developer', company: 'WebWorks Ltd.' },
-  ],
-};
-
 export const Profile = () => {
   const { userDetails, setuserDetails, headers } = useContext(UserContext);
+  const [consumerProjects, setConsumerProjects] = useState([]);
+  const [appliedProject, setAppliedProject] = useState([]);
   const { userId, token } = useAppStore((state) => ({ userId: state.userId, token: state.token }));
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
@@ -42,8 +26,28 @@ export const Profile = () => {
     }
   };
 
+  const getConsumerProjects = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects/consumer/${userId}`, { headers: headers });
+      setConsumerProjects(response.data)
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  const appliedJob = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/projects/applied-projects`, { userId: userId }, { headers: headers });
+      setAppliedProject(response.data)
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     getUserDetails();
+    getConsumerProjects();
+    appliedJob();
   }, [token, userUpdate]);
 
   const initialValues = {
@@ -78,8 +82,6 @@ export const Profile = () => {
       },
     });
 
-  console.log(values)
-
 
   return (
     <>
@@ -99,22 +101,65 @@ export const Profile = () => {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">Applied Jobs</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-300">
-                <thead>
+            <h3 className="text-xl font-semibold mb-2">{userDetails.userType === "Consumer" ? "Projects" : "Applied Jobs"}</h3>
+
+            <div className="container mx-auto mt-8">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 border-b">ID</th>
-                    <th className="px-4 py-2 border-b">Title</th>
-                    <th className="px-4 py-2 border-b">Company</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Title
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Budget
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Deadlines
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Details
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {userData.appliedJobs.map(job => (
-                    <tr key={job.id}>
-                      <td className="px-4 py-2 border-b">{job.id}</td>
-                      <td className="px-4 py-2 border-b">{job.title}</td>
-                      <td className="px-4 py-2 border-b">{job.company}</td>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {userDetails.userType === "Consumer" ? consumerProjects.map((item) => (
+                    <tr key={item._id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.title}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.status}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">${item.budget}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.deadline}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900 cursor-pointer">Open</div>
+                      </td>
+                    </tr>
+                  )) : appliedProject.map((item) => (
+                    <tr key={item._id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.title}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.status}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">${item.budget}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{item.deadline}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900 cursor-pointer">Open</div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

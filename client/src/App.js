@@ -13,7 +13,7 @@ import { JobContextProvider } from "./Context/JobContext";
 import { PostJob } from "./pages/PostJob";
 import JobList from "./pages/ListJob";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
-import ProductPage from "./pages/ProductPage";
+import ProjectPage from "./pages/ProjectPage";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 
@@ -49,7 +49,7 @@ function App() {
                 path="/product/:id"
                 element={
                   <ProtectedRoute>
-                    <ProductPage />
+                    <ProjectPage />
                   </ProtectedRoute>
                 }
               ></Route>

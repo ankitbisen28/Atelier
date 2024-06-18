@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const Project = require('../models/project');
 const Category = require('../models/category');
+const User = require('../models/user')
 
 const FILE_TYPE_MAP = {
     'image/png': 'png',
@@ -122,7 +123,7 @@ router.put('/:id', async (req, res) => {
     })
 
     if (!project)
-        return res.status(500).send('Product cannot be updated')
+        return res.status(500).send('Project cannot be updated')
     res.send(project);
 })
 
@@ -157,6 +158,83 @@ router.get('/get/featured/:count', async (req, res) => {
     res.status(200).send(projects);
 })
 
+router.put('/bid/:projectId', async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+        const { bidderId, amount, message } = req.body;
+
+        // Validate input
+        if (!bidderId || !amount) {
+            return res.status(400).json({ message: 'Bidder ID and amount are required.' });
+        }
+
+        // Find the project by ID
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+
+        // Check if the bidder has already placed a bid
+        const existingBid = project.bids.find(bid => bid.bidderId === bidderId);
+        if (existingBid) {
+            return res.status(400).json({ message: 'You have already placed a bid on this project.' });
+        }
+
+        // Create a new bid
+        const newBid = {
+            bidderId,
+            amount,
+            message,
+            createdAt: new Date()
+        };
+
+        // Add the bid to the project's bids array
+        project.bids.push(newBid);
+
+        // Save the updated project
+        await project.save();
+
+        // Respond with the updated project
+        res.status(200).json(project.bids);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error.', error });
+    }
+})
+
+// Endpoint to list projects of a specific consumer
+router.get('/consumer/:consumerId', async (req, res) => {
+    try {
+        const consumerId = req.params.consumerId;
+        const projects = await Project.find({ consumerId: consumerId });
+        res.json(projects);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+router.post('/applied-projects', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        console.log("userId :", userId)
+        // Ensure the user is a maker
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (user.userType !== 'Maker') {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        // Find projects where the user has placed a bid
+        const appliedProjects = await Project.find({ 'bids.bidderId': userId });
+
+        res.json(appliedProjects);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 router.put('/gallery-images/:id', upload.array('images', 10), async (req, res) => {
 
     if (!mongoose.isValidObjectId(req.params.id)) {
@@ -181,7 +259,7 @@ router.put('/gallery-images/:id', upload.array('images', 10), async (req, res) =
         })
 
     if (!project)
-        return res.status(500).send('Product cannot be updated')
+        return res.status(500).send('Project cannot be updated')
     res.send(project);
 })
 
