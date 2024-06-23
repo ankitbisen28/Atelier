@@ -26,9 +26,9 @@ const ProjectPage = () => {
   };
 
   const initialValues = {
-    bidderId: userId,
-    amount: "",
-    message: "",
+    maker_id: userId,
+    bid_amount: "",
+    proposal_text: "",
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -37,7 +37,7 @@ const ProjectPage = () => {
       onSubmit: async (values, action) => {
         try {
           const response = await axios.put(
-            `${import.meta.env.VITE_API_URI}/api/v1/projects/bid/${product._id}`,
+            `${import.meta.env.VITE_API_URI}/api/v1/bid/${product._id}`,
             values
           );
           toast.success(`Proposal Submitted`);
@@ -101,13 +101,13 @@ const ProjectPage = () => {
             <input
               className="w-full mt-1 p-2 border border-gray-300 rounded"
               type="number"
-              name="amount"
-              value={values.amount}
+              name="bid_amount"
+              value={values.bid_amount}
               onChange={handleChange}
               onBlur={handleBlur}
             />
             <label className="block text-white p-3">Massage</label>
-            <textarea name='message' value={values.message} onChange={handleChange} onBlur={handleBlur} rows='6' cols="60">
+            <textarea name='proposal_text' value={values.proposal_text} onChange={handleChange} onBlur={handleBlur} rows='6' cols="60">
             </textarea>
             <div className="modal-action">
               <button className='p-3' type='submit'>

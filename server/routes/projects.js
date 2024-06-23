@@ -5,7 +5,8 @@ const multer = require('multer');
 
 const Project = require('../models/project');
 const Category = require('../models/category');
-const User = require('../models/user')
+const User = require('../models/user');
+const Bid = require('../models/Bid');
 
 const FILE_TYPE_MAP = {
     'image/png': 'png',
@@ -158,48 +159,6 @@ router.get('/get/featured/:count', async (req, res) => {
     res.status(200).send(projects);
 })
 
-router.put('/bid/:projectId', async (req, res) => {
-    try {
-        const projectId = req.params.projectId;
-        const { bidderId, amount, message } = req.body;
-
-        // Validate input
-        if (!bidderId || !amount) {
-            return res.status(400).json({ message: 'Bidder ID and amount are required.' });
-        }
-
-        // Find the project by ID
-        const project = await Project.findById(projectId);
-        if (!project) {
-            return res.status(404).json({ message: 'Project not found.' });
-        }
-
-        // Check if the bidder has already placed a bid
-        const existingBid = project.bids.find(bid => bid.bidderId === bidderId);
-        if (existingBid) {
-            return res.status(400).json({ message: 'You have already placed a bid on this project.' });
-        }
-
-        // Create a new bid
-        const newBid = {
-            bidderId,
-            amount,
-            message,
-            createdAt: new Date()
-        };
-
-        // Add the bid to the project's bids array
-        project.bids.push(newBid);
-
-        // Save the updated project
-        await project.save();
-
-        // Respond with the updated project
-        res.status(200).json(project.bids);
-    } catch (error) {
-        res.status(500).json({ message: 'Server error.', error });
-    }
-})
 
 // Endpoint to list projects of a specific consumer
 router.get('/consumer/:consumerId', async (req, res) => {
@@ -215,7 +174,7 @@ router.get('/consumer/:consumerId', async (req, res) => {
 router.post('/applied-projects', async (req, res) => {
     try {
         const userId = req.body.userId;
-        console.log("userId :", userId)
+
         // Ensure the user is a maker
         const user = await User.findById(userId);
         if (!user) {
@@ -226,9 +185,20 @@ router.post('/applied-projects', async (req, res) => {
         }
 
         // Find projects where the user has placed a bid
-        const appliedProjects = await Project.find({ 'bids.bidderId': userId });
+        const appliedBids = await Bid.find({ maker_id: userId });
+        if (appliedBids.length === 0) {
+            return res.status(404).json({ message: 'No projects found' });
+        }
 
-        res.json(appliedProjects);
+        // Fetch the project details for each bid
+        const projectDetails = await Promise.all(
+            appliedBids.map(async (bid) => {
+                const project = await Project.findById(bid.project_id);
+                return project;
+            })
+        );
+
+        res.json(projectDetails);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

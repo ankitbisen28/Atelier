@@ -26,18 +26,18 @@ const api = process.env.API_URL;
 const categoriesRoute = require('./routes/categories.js');
 const projects = require('./routes/projects.js');
 const userRoute = require('./routes/users.js');
-const orderRoute = require('./routes/orders.js');
+const BidRoute = require('./routes/bids.js');
 
 // Routes
 app.use(`${api}/projects`, projects);
 app.use(`${api}/categories`, categoriesRoute);
 app.use(`${api}/users`, userRoute);
-app.use(`${api}/orders`, orderRoute);
+app.use(`${api}/bid`, BidRoute);
 
 mongoose.Promise = global.Promise;
 
 // Connecting to the database
-mongoose.connect(process.env.DATABASE_URL,{
+mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false

@@ -15,14 +15,6 @@ const projectSchema = mongoose.Schema({
             "uploadedAt": Date // Timestamp when the image was uploaded
         }
     ],
-    "bids": [
-        {
-            "bidderId": String, // Reference to the user who placed the bid
-            "amount": Number,
-            "message": String,
-            "createdAt": Date
-        }
-    ],
     "selectedBidder": String, // Reference to the selected bidder (if any)
     "status": String, // "open", "closed", "in progress", "completed"
     "createdAt": Date,
