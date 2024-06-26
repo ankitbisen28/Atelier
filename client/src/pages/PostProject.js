@@ -7,7 +7,7 @@ import JobContext from "../Context/JobContext";
 import { useAppStore } from "../utils/store";
 import { toast } from "react-toastify";
 
-export const PostJob = () => {
+export const PostProject = () => {
   const { HeaderTypeTwo } = useContext(UserContext);
   const { categories } = useContext(JobContext);
   const statuses = ['Open', 'Close', 'In progress', 'Completed']

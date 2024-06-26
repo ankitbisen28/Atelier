@@ -1,9 +1,9 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import bannerOne from "../assets/Images/banner-1.jpg";
-import bannerTwo from "../assets/Images/banner-2.jpg";
-import bannerThree from "../assets/Images/banner-3.jpg";
+import bannerOne from "../assets/Images/banner-1.png";
+import bannerTwo from "../assets/Images/banner-2.png";
+import bannerThree from "../assets/Images/banner-3.png";
 import bannerFour from "../assets/Images/banner-4.jpg";
 import { Link } from "react-router-dom";
 
@@ -13,23 +13,23 @@ export const BannerInside = () => {
       image: bannerOne,
       text: "Post Your first Job",
       buttonText: "Post Now",
-      buttonLink: "/postJob",
+      buttonLink: "/post-project",
     },
     {
       image: bannerTwo,
       text: "Apply Your First Job",
       buttonText: "Apply Job",
-      buttonLink: "listjobs",
+      buttonLink: "/list-projects",
     },
     {
       image: bannerThree,
-      text: "Discover our third banner",
+      text: "Meet Our Experts What they says",
       buttonText: "Get Started",
       buttonLink: "#link3",
     },
     {
       image: bannerFour,
-      text: "Enjoy our fourth banner",
+      text: "100+ Happy Customers",
       buttonText: "Contact Us",
       buttonLink: "#link4",
     },

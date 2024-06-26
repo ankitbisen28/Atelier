@@ -1,8 +1,6 @@
 import React from "react";
 import { Category } from "../components/Category";
 import { Banner } from "../components/Banner";
-import { Services } from "../components/Services";
-import { ClothCategory } from "../components/ClothCategory";
 import { JobCard } from "../components/JobCard";
 
 export const Home = () => {
@@ -16,14 +14,7 @@ export const Home = () => {
                     <Banner />
                 </div>
             </div>
-            <Services />
-            <h4 className="text-center mt-3 text-2xl">
-                Explore Category
-            </h4>
-            <div className="flex flex-col md:flex-col items-center md:items-center gap-7">
-                <ClothCategory />
-            </div>
-            <h4 className="text-center p-4 text-2xl">
+            <h4 className="text-center p-4 text-4xl">
                 Latest Jobs
             </h4>
             <div className="mt-7 flex flex-wrap gap-4 justify-center">

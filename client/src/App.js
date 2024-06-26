@@ -6,11 +6,9 @@ import { Register } from "./pages/Register";
 import { Navbar } from "./components/Navbar";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
-
-import { UserDetail } from "./pages/UserDetail";
 import { UserContextProvider } from "./Context/UserContext";
 import { JobContextProvider } from "./Context/JobContext";
-import { PostJob } from "./pages/PostJob";
+import { PostProject } from "./pages/PostProject";
 import JobList from "./pages/ListJob";
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import ProjectPage from "./pages/ProjectPage";
@@ -53,9 +51,8 @@ function App() {
                   </ProtectedRoute>
                 }
               ></Route>
-              <Route path="/userDetail" element={<UserDetail />}></Route>
-              <Route path="/postJob" element={<PostJob />}></Route>
-              <Route path="/listjobs" element={<JobList />}></Route>
+              <Route path="/post-project" element={<PostProject />}></Route>
+              <Route path="/list-projects" element={<JobList />}></Route>
             </Routes>
           </JobContextProvider>
         </UserContextProvider>
