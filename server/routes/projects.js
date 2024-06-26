@@ -48,12 +48,16 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const project = await Project.findById(req.params.id).populate('category');
-
-    if (!project) {
-        res.status(500).json({ success: false, message: 'The product with the given ID not exists' })
+    try {
+        const project = await Project.findById(req.params.id).lean();
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        const consumer = await User.findById(project.consumerId).lean();
+        res.status(200).json({ project, consumer });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch project details', error });
     }
-    res.status(200).send(project)
 })
 
 router.post('/', upload.array('images', 5), async (req, res) => {

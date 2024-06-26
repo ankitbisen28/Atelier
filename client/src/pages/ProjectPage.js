@@ -7,11 +7,13 @@ import { RiMailSendFill } from "react-icons/ri";
 import { useFormik } from "formik";
 import { useAppStore } from '../utils/store';
 import { toast } from 'react-toastify';
+import ProfileCard from '../components/ProfileCard';
 
 const ProjectPage = () => {
   const { id, HeaderTypeTwo } = useParams();
   const { token } = useContext(UserContext);
   const [product, setProduct] = React.useState({});
+  const [consumer, setConsumer] = React.useState({});
   const { userId } = useAppStore((state) => ({ userId: state.userId }));
 
   const getProductDetail = async () => {
@@ -19,11 +21,14 @@ const ProjectPage = () => {
       const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects/${id}`, {
         headers: HeaderTypeTwo,
       });
-      setProduct(response.data);
+      setProduct(response.data.project);
+      setConsumer(response.data.consumer);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  console.log(consumer)
 
   const initialValues = {
     maker_id: userId,
@@ -69,7 +74,7 @@ const ProjectPage = () => {
                 {product.images.map((image, i) => (
                   <div key={i} className="relative w-full h-[70vh]">
                     <img
-                      className="object-cover w-full h-full"
+                      className="object-cover w-full h-full rounded-2xl"
                       alt={`image-${i + 1}`}
                       src={image.url}
                     />
@@ -91,6 +96,10 @@ const ProjectPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="container m-3">
+
+        <ProfileCard consumer={consumer} />
       </div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       <dialog id="my_modal_1" className="modal">
