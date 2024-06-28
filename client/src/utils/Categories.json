@@ -1,0 +1,99 @@
+[
+    {
+        "name": "T-Shirts",
+        "link": "/men-tshirts"
+    },
+    {
+        "name": "Casual Shirts",
+        "link": "/men-casual-shirts"
+    },
+    {
+        "name": "Formal Shirts",
+        "link": "/men-formal-shirts"
+    },
+    {
+        "name": "Sweatshirts",
+        "link": "/men-sweatshirts"
+    },
+    {
+        "name": "Sweaters",
+        "link": "/men-sweaters"
+    },
+    {
+        "name": "Jackets",
+        "link": "/men-jackets"
+    },
+    {
+        "name": "Blazers & Coats",
+        "link": "/men-blazers"
+    },
+    {
+        "name": "Suits",
+        "link": "/men-suits"
+    },
+    {
+        "name": "Rain Jackets",
+        "link": "/rain-jacket"
+    },
+    {
+        "name": "whitespace",
+        "link": "whitespace",
+        "style": "whitespace"
+    },
+    {
+        "name": "Kurtas & Kurta Sets",
+        "link": "/men-kurtas"
+    },
+    {
+        "name": "Sherwanis",
+        "link": "/sherwani"
+    },
+    {
+        "name": "Nehru Jackets",
+        "link": "/nehru-jackets"
+    },
+    {
+        "name": "Dhotis",
+        "link": "/dhoti"
+    },
+    {
+        "name": "Jeans",
+        "link": "/men-jeans"
+    },
+    {
+        "name": "Casual Trousers",
+        "link": "/men-casual-trousers"
+    },
+    {
+        "name": "Formal Trousers",
+        "link": "/men-formal-trousers"
+    },
+    {
+        "name": "Shorts",
+        "link": "/mens-shorts"
+    },
+    {
+        "name": "Track Pants & Joggers",
+        "link": "/men-trackpants"
+    },
+    {
+        "name": "Briefs & Trunks",
+        "link": "/men-briefs-and-trunks"
+    },
+    {
+        "name": "Boxers",
+        "link": "/men-boxers"
+    },
+    {
+        "name": "Vests",
+        "link": "/men-innerwear-vests"
+    },
+    {
+        "name": "Sleepwear & Loungewear",
+        "link": "/men-nightwear"
+    }, 
+    {
+        "name": "Thermals",
+        "link": "/men-thermals"
+    }
+]
