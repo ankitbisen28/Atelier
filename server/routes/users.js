@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const upload = require('../helpers/upload')
 
 const User = require('../models/user');
 require('dotenv/config');
@@ -28,34 +29,35 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-    // checking if user already exist 
-    const emailExist = await User.findOne({ email: req.body.email });
-    if (emailExist) return res.status(400).send("email already exists");
+    try {
+        const { username, email, password, role, profile } = req.body;
 
-    let user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.password, 10),
-        phone: req.body.phone,
-        isAdmin: req.body.isAdmin,
-        street: req.body.street,
-        apartment: req.body.apartment,
-        zip: req.body.zip,
-        city: req.body.city,
-        country: req.body.country,
-        userType: req.body.userType
-    })
+        // Check if user already exists
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username or email already taken' });
+        }
 
-    user = await user.save();
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (!user)
-        return res.status(404).send('User cannot be created')
+        // Create new user
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            role,
+            profile
+        });
 
-    // Generate JWT token for the registered user
-    const token = jwt.sign({ username: user.email }, JWT_SECRET, { expiresIn: '1d' });
+        await newUser.save();
+        // Generate JWT token for the registered user
+        const token = jwt.sign({ username: newUser.email }, JWT_SECRET, { expiresIn: '1d' });
 
-    res.status(201).json({ user: user.id, token });
-    // res.send(user);
+        res.status(201).json({ message: 'User registered successfully', user: newUser.id, token: token });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 })
 
 router.delete('/:id', (req, res) => {
@@ -78,11 +80,11 @@ router.post('/login', async (req, res) => {
         return res.status(400).send('User with given Email not found');
     }
 
-    if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
+    if (user && bcrypt.compareSync(req.body.password, user.password)) {
         const token = jwt.sign({
             userID: user.id,
             isAdmin: user.isAdmin
-        }, secret, { algorithm: 'HS256', expiresIn: '5d' })
+        }, secret, { algorithm: 'HS256', expiresIn: '1d' })
         res.status(200).json({ user: user.id, token: token });
     } else {
         res.status(400).send('Password is mismatch');
@@ -101,49 +103,29 @@ router.get('/get/count', async (req, res) => {
     });
 })
 
-router.put('/:id', async (req, res) => {
-    const { name, email, phone, apartment, street, city, zip, country, userType } = req.body;
-
+// Update user by ID
+router.put('/:id', upload.single('profilePicture'), async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('-passwordHash');;
+        // Extract updates from req.body and req.file
+        const updates = {};
+        if (req.body.fullName) updates['profile.fullName'] = req.body.fullName;
+        if (req.body.address) updates['profile.address'] = req.body.address;
+        if (req.body.phoneNumber) updates['profile.phoneNumber'] = req.body.phoneNumber;
+        if (req.body.country) updates['profile.country'] = req.body.country;
+        if (req.file) updates['profile.profilePicture'] = req.file.path;
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        // Update user by ID
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: updates }, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        // checking if user already exist 
-        const emailExist = await User.findOne({ email: req.body.email });
-        if (emailExist) return res.status(400).send("email already exists");
-
-        user.name = name;
-        user.email = email;
-        user.phone = phone;
-        user.apartment = apartment;
-        user.street = street;
-        user.city = city;
-        user.zip = zip;
-        user.country = country;
-        user.userType = userType;
-
-        await user.save();
-
-        res.status(200).json({
-            message: 'Profile updated successfully',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                apartment: user.apartment,
-                street: user.street,
-                city: user.city,
-                zip: user.zip,
-                country: user.country,
-            },
-        });
+        res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
+
+
 
 module.exports = router;

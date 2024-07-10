@@ -1,55 +1,87 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const userSchema = mongoose.Schema({
-    name: {
+// Define the User Schema
+const userSchema = new Schema({
+    username: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        trim: true
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        trim: true
     },
-    passwordHash: {
+    password: {
         type: String,
         required: true
     },
-    phone: {
+    role: {
         type: String,
+        enum: ['Consumer', 'Maker'],
         required: true
     },
-    isAdmin: {
-        type: Boolean,
-        default: false
+    profile: {
+        fullName: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        address: {
+            type: String,
+            trim: true
+        },
+        phoneNumber: {
+            type: String,
+            trim: true
+        },
+        profilePicture: {
+            type: String,
+            trim: true
+        }, 
+        country: {
+            type: String,
+            default: ''
+        },
     },
-    street: {
-        type: String,
-        default: ''
+    ratings: {
+        averageRating: {
+            type: Number,
+            default: 0
+        },
+        reviews: [{
+            reviewerId: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            },
+            rating: {
+                type: Number,
+                required: true
+            },
+            comment: {
+                type: String,
+                trim: true
+            },
+            date: {
+                type: Date,
+                default: Date.now
+            }
+        }]
     },
-    apartment: {
-        type: String,
-        default: ''
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
-    zip: {
-        type: String,
-        default: ''
-    },
-    city: {
-        type: String,
-        default: ''
-    },
-    country: {
-        type: String,
-        default: ''
-    },
-    userType: { type: String, required: true },
-})
-
-userSchema.virtual('id').get(function () {
-    return this._id.toHexString();
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-userSchema.set('toJSON', {
-    virtuals: true,
-});
+// Create the User model
+const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = User;
