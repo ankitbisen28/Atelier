@@ -1,215 +1,70 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useFormik } from 'formik';
-import axios from 'axios';
-import { countries } from '../utils/countries';
-import { registerSchema } from '../Schema';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useAppStore } from '../utils/store';
-import { toast } from 'react-toastify';
+import React, { useState } from 'react';
+import Step1 from './Steps/Step1';
+import Step2 from './Steps/Step2';
+import Step3 from './Steps/Step3';
 
-export const Register = () => {
-  const navigate = useNavigate();
-
-  const { setToken, setUserId } = useAppStore((state) => ({ setToken: state.setToken, setUserId: state.setUserId }));
-
-  const initialValues = {
+const Register = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    username: '',
     email: '',
-    name: '',
     password: '',
-    phone: '',
-    street: '',
-    apartment: '',
-    zip: '',
-    city: '',
-    country: '',
-    userType: ''
+    role: 'Consumer',
+    profile: {
+      fullName: '',
+      address: '',
+      phoneNumber: '',
+      profilePicture: null,
+      country: '',
+    },
+  });
+
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name.startsWith('profile.')) {
+      const profileField = name.split('.')[1];
+      setFormData({
+        ...formData,
+        profile: {
+          ...formData.profile,
+          [profileField]: value,
+        },
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: registerSchema,
-      onSubmit: async (values, action) => {
-        try {
-          const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, values);
-          setToken(response.data.token);
-          setUserId(response.data.user)
-          toast.success("User Registered");
-          action.resetForm();
-          navigate('/');
-        } catch (error) {
-          toast.error(`Registration failed: ${error.response.data}`);
-          console.error(error);
-        }
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      profile: {
+        ...formData.profile,
+        profilePicture: e.target.files[0],
       },
     });
+  };
 
   return (
-    <div className="w-full max-w-lg mx-auto p-8">
-      <div className="flex flex-col items-center mb-6">
-        <div className="bg-secondary-main rounded-full p-2 mb-2">
-          <LockOutlinedIcon className="text-white" />
-        </div>
-        <h1 className="text-2xl font-semibold">Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-lg">
+        {step === 1 && <Step1 nextStep={nextStep} handleChange={handleChange} formData={formData} />}
+        {step === 2 && (
+          <Step2
+            nextStep={nextStep}
+            prevStep={prevStep}
+            handleChange={handleChange}
+            handleFileChange={handleFileChange}
+            formData={formData}
+          />
+        )}
+        {step === 3 && <Step3 prevStep={prevStep} formData={formData} />}
       </div>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={values.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.name && errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.email && errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.password && errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="text"
-              name="phone"
-              placeholder="Phone"
-              value={values.phone}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.phone && errors.phone && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="text"
-              name="street"
-              placeholder="Street"
-              value={values.street}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.street && errors.street && (
-              <p className="text-red-500 text-sm mt-1">{errors.street}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="text"
-              name="apartment"
-              placeholder="Apartment"
-              value={values.apartment}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.apartment && errors.apartment && (
-              <p className="text-red-500 text-sm mt-1">{errors.apartment}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="text"
-              name="zip"
-              placeholder="ZIP"
-              value={values.zip}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.zip && errors.zip && (
-              <p className="text-red-500 text-sm mt-1">{errors.zip}</p>
-            )}
-          </div>
-          <div>
-            <input
-              type="text"
-              name="city"
-              placeholder="City"
-              value={values.city}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {touched.city && errors.city && (
-              <p className="text-red-500 text-sm mt-1">{errors.city}</p>
-            )}
-          </div>
-          <div>
-            <select
-              name="country"
-              value={values.country}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className="w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="" label="Country" />
-              {countries.map((country) => (
-                <option key={country.code} value={country.name}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-            {touched.country && errors.country && (
-              <p className="text-red-500 text-sm mt-1">{errors.country}</p>
-            )}
-          </div>
-          <div>
-            <div className='flex flex-row items-center'>
-              <p className='m-3'>Consumer</p>
-              <input type="radio" name="userType" value='Consumer' onChange={handleChange} className="radio radio-primary" />
-              <p className='m-3'>Maker</p>
-              <input type="radio" name="userType" value='Maker' onChange={handleChange} className="radio radio-primary" />
-            </div>
-            {touched.userType && errors.userType && (
-              <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
-            )}
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="w-full p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700"
-        >
-          Register
-        </button>
-        <div className="text-center mt-4">
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Already have an account? Login
-          </Link>
-        </div>
-      </form>
     </div>
   );
 };
+
+export default Register;

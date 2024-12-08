@@ -28,7 +28,8 @@ router.get('/:id', async (req, res) => {
 
 })
 
-router.post('/register', async (req, res) => {
+// User registration route with file upload
+router.post('/register', upload.single('profile[profilePicture]'), async (req, res) => {
     try {
         const { username, email, password, role, profile } = req.body;
 
@@ -37,9 +38,18 @@ router.post('/register', async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: 'Username or email already taken' });
         }
-
+        console.log("working 1")
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Handle profile data and file upload
+        const fullName = profile.fullName;
+        const address = profile.address;
+        const phoneNumber = profile.phoneNumber;
+        const country = profile.country;
+
+        // Get the uploaded file's path
+        const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
 
         // Create new user
         const newUser = new User({
@@ -47,18 +57,26 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword,
             role,
-            profile
+            profile: {
+                fullName,
+                address,
+                phoneNumber,
+                profilePicture,
+                country,
+            },
         });
 
         await newUser.save();
+
         // Generate JWT token for the registered user
-        const token = jwt.sign({ username: newUser.email }, JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ username: newUser.email }, process.env.secret, { expiresIn: '1d' });
 
         res.status(201).json({ message: 'User registered successfully', user: newUser.id, token: token });
     } catch (error) {
+        console.error(error)
         res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
 
 router.delete('/:id', (req, res) => {
     User.findByIdAndRemove(req.params.id).then(user => {
