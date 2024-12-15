@@ -93,11 +93,11 @@ export const Profile = () => {
           </div>
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
-            <p className="text-lg"><strong>Name:</strong> {userDetails.name}</p>
+            <p className="text-lg"><strong>Name:</strong> {userDetails?.profile?.fullName || "No name available"}</p>
             <p className="text-lg"><strong>Email:</strong> {userDetails.email}</p>
-            <p className="text-lg"><strong>Phone:</strong> {userDetails.phone}</p>
-            <p className="text-lg"><strong>User Type: </strong> {userDetails.userType}</p>
-            <p className="text-lg"><strong>Address:</strong> {`${userDetails.apartment}, ${userDetails.street}, ${userDetails.city}, ${userDetails.zip}, ${userDetails.country}`}</p>
+            <p className="text-lg"><strong>Phone:</strong> ${userDetails?.profile?.phoneNumber || "No address available"}</p>
+            <p className="text-lg"><strong>User Type: </strong> {userDetails.role}</p>
+            <p className="text-lg"><strong>Address:</strong> {`${userDetails?.profile?.address || "No address available"},${userDetails?.profile?.country || "No country available"}`}</p>
           </div>
 
           <div>

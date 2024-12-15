@@ -10,9 +10,7 @@ export const UserContextProvider = ({ children }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [userDetails, setuserDetails] = useState(
-    JSON.parse(localStorage.getItem("userDetails")) || []
-  );
+  const [userDetails, setuserDetails] = useState({});
   const navigate = useNavigate();
 
   const { token, setToken, setUserId } = useAppStore((state) => ({ token: state.token, setToken: state.setToken, setUserId: state.setUserId }));
