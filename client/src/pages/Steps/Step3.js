@@ -27,17 +27,21 @@ const Step3 = ({ prevStep, formData }) => {
             formDataObj.append('address', formData.profile.address);
             formDataObj.append('phoneNumber', formData.profile.phoneNumber);
             formDataObj.append('country', formData.profile.country);
-
+            console.log(formData.profile.profilePicture)
             if (formData.profile.profilePicture) {
-                formDataObj.append('profilePicture', formData.profile.profilePicture);
+                formDataObj.append('profilePicture', formData.profile.profilePicture[0]);
             }
+            console.log(formDataObj)
 
-            const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/users/register`, formDataObj, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             setToken(response.data.token);
             setUserId(response.data.user)
             toast.success("User Registered");
             navigate('/');
-            console.log('Submitting Data:', formData);
         } catch (error) {
             toast.error(`Registration failed: ${error.response.data}`);
             console.error(error);

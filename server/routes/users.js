@@ -29,24 +29,19 @@ router.get('/:id', async (req, res) => {
 })
 
 // User registration route with file upload
-router.post('/register', upload.single('profile[profilePicture]'), async (req, res) => {
+router.post('/register', upload.single('profilePicture'), async (req, res) => {
     try {
-        const { username, email, password, role, profile } = req.body;
+
+        const { username, email, password, role, fullName, address, phoneNumber, country } = req.body;
 
         // Check if user already exists
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
             return res.status(400).json({ error: 'Username or email already taken' });
         }
-        console.log("working 1")
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Handle profile data and file upload
-        const fullName = profile.fullName;
-        const address = profile.address;
-        const phoneNumber = profile.phoneNumber;
-        const country = profile.country;
 
         // Get the uploaded file's path
         const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
