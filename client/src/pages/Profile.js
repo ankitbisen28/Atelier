@@ -10,17 +10,19 @@ import { toast } from "react-toastify";
 
 
 export const Profile = () => {
-  const { userDetails, setuserDetails, headers } = useContext(UserContext);
+  const { headers } = useContext(UserContext);
   const [consumerProjects, setConsumerProjects] = useState([]);
   const [appliedProject, setAppliedProject] = useState([]);
-  const { userId, token } = useAppStore((state) => ({ userId: state.userId, token: state.token }));
+  const { userId, token, setProfile, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
+
+  console.log(profile)
 
   const getUserDetails = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, { headers: headers });
-      setuserDetails(response.data);
+      setProfile(response.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -51,15 +53,15 @@ export const Profile = () => {
   }, [token, userUpdate]);
 
   const initialValues = {
-    email: userDetails.email,
-    name: userDetails.name,
-    phone: userDetails.phone,
-    street: userDetails.street,
-    apartment: userDetails.apartment,
-    zip: userDetails.zip,
-    city: userDetails.city,
-    country: userDetails.country,
-    userType: userDetails.userType
+    email: profile?.email,
+    name: profile?.name,
+    phone: profile?.phone,
+    street: profile?.street,
+    apartment: profile?.apartment,
+    zip: profile?.zip,
+    city: profile?.city,
+    country: profile?.country,
+    userType: profile?.userType
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -93,15 +95,15 @@ export const Profile = () => {
           </div>
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
-            <p className="text-lg"><strong>Name:</strong> {userDetails?.profile?.fullName || "No name available"}</p>
-            <p className="text-lg"><strong>Email:</strong> {userDetails.email}</p>
-            <p className="text-lg"><strong>Phone:</strong> ${userDetails?.profile?.phoneNumber || "No address available"}</p>
-            <p className="text-lg"><strong>User Type: </strong> {userDetails.role}</p>
-            <p className="text-lg"><strong>Address:</strong> {`${userDetails?.profile?.address || "No address available"},${userDetails?.profile?.country || "No country available"}`}</p>
+            <p className="text-lg"><strong>Name:</strong> {profile?.profile?.fullName || "No name available"}</p>
+            <p className="text-lg"><strong>Email:</strong> {profile?.email}</p>
+            <p className="text-lg"><strong>Phone:</strong> ${profile?.profile?.phoneNumber || "No address available"}</p>
+            <p className="text-lg"><strong>User Type: </strong> {profile?.role}</p>
+            <p className="text-lg"><strong>Address:</strong> {`${profile?.profile?.address || "No address available"},${profile?.profile?.country || "No country available"}`}</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">{userDetails.userType === "Consumer" ? "Projects" : "Applied Jobs"}</h3>
+            <h3 className="text-xl font-semibold mb-2">{profile?.userType === "Consumer" ? "Projects" : "Applied Jobs"}</h3>
 
             <div className="container mx-auto mt-8">
               <table className="min-w-full divide-y divide-gray-200">
@@ -125,7 +127,7 @@ export const Profile = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {userDetails.userType === "Consumer" ? consumerProjects.map((item) => (
+                  {profile?.userType === "Consumer" ? consumerProjects.map((item) => (
                     <tr key={item._id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{item.title}</div>

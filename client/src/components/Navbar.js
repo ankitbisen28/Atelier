@@ -4,8 +4,9 @@ import UserContext from "../Context/UserContext";
 import { useAppStore } from "../utils/store";
 
 export const Navbar = () => {
-  const { logout } = useContext(UserContext);
-  const { userId } = useAppStore((state) => ({ userId: state.userId }));
+  const { logout, userDetails } = useContext(UserContext);
+  const { userId, profile } = useAppStore((state) => ({ userId: state.userId, profile: state.profile }));
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -27,7 +28,7 @@ export const Navbar = () => {
           <div className="dropdown dropdown-end">
             {userId ? <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <img alt={profile.profile.fullName} src={profile.profile.profilePicture} />
               </div>
             </div> : ""}
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">

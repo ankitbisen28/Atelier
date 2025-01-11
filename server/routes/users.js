@@ -31,7 +31,6 @@ router.get('/:id', async (req, res) => {
 // User registration route with file upload
 router.post('/register', upload.single('profilePicture'), async (req, res) => {
     try {
-
         const { username, email, password, role, fullName, address, phoneNumber, country } = req.body;
 
         // Check if user already exists
@@ -39,12 +38,12 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: 'Username or email already taken' });
         }
+
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-
-        // Get the uploaded file's path
-        const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
+        // Get the uploaded file's URL from Cloudinary
+        const profilePicture = req.file ? req.file.path : '';
 
         // Create new user
         const newUser = new User({
@@ -56,7 +55,7 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
                 fullName,
                 address,
                 phoneNumber,
-                profilePicture,
+                profilePicture, // Store Cloudinary URL
                 country,
             },
         });
@@ -66,12 +65,13 @@ router.post('/register', upload.single('profilePicture'), async (req, res) => {
         // Generate JWT token for the registered user
         const token = jwt.sign({ username: newUser.email }, process.env.secret, { expiresIn: '1d' });
 
-        res.status(201).json({ message: 'User registered successfully', user: newUser.id, token: token });
+        res.status(201).json({ message: 'User registered successfully', user: newUser.id, token: token, profileImageUrl: profilePicture });
     } catch (error) {
-        console.error(error)
+        console.error(error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 router.delete('/:id', (req, res) => {
     User.findByIdAndRemove(req.params.id).then(user => {

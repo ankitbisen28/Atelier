@@ -28,6 +28,10 @@ const useAppStore = create(
 
                     // push element
                 }
+            },
+            profile:null,
+            setProfile:(profile)=>{
+                set({profile})
             }
         }),
         {
