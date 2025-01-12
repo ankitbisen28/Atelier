@@ -6,7 +6,7 @@ import Register from "./pages/Register";
 import { Navbar } from "./components/Navbar";
 import { About } from "./pages/About";
 import { Profile } from "./pages/Profile";
-import { UserContextProvider } from "./Context/UserContext";
+import { UserContextProvider, UserContext } from "./Context/UserContext";
 import { JobContextProvider } from "./Context/JobContext";
 import { PostProject } from "./pages/PostProject";
 import JobList from "./pages/ListJob";
@@ -14,8 +14,58 @@ import { ProtectedRoute } from "./utils/ProtectedRoute";
 import ProjectPage from "./pages/ProjectPage";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
+import { useAppStore } from '../src/utils/store';
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 function App() {
+  const [consumerProjects, setConsumerProjects] = useState([]);
+  const [appliedProject, setAppliedProject] = useState([]);
+  const { userId, token, setProfile, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
+
+  const getUserDetails = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      });
+      setProfile(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+
+  const getConsumerProjects = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects/consumer/${userId}`, {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      });
+      setConsumerProjects(response.data)
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  const appliedJob = async () => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/projects/applied-projects`, { userId: userId }, {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      });
+      setAppliedProject(response.data)
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  }
+
+  useEffect(() => {
+    getUserDetails();
+    getConsumerProjects();
+    appliedJob();
+  }, [token]);
+
   return (
     <>
       <Router>
@@ -39,7 +89,7 @@ function App() {
                 path="/user/:id"
                 element={
                   <ProtectedRoute>
-                    <Profile />
+                    <Profile consumerProjects={consumerProjects} appliedProject={appliedProject} />
                   </ProtectedRoute>
                 }
               ></Route>

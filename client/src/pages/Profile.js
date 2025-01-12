@@ -9,48 +9,12 @@ import { countries } from "../utils/countries";
 import { toast } from "react-toastify";
 
 
-export const Profile = () => {
+export const Profile = ({ consumerProjects, appliedProject }) => {
   const { headers } = useContext(UserContext);
-  const [consumerProjects, setConsumerProjects] = useState([]);
-  const [appliedProject, setAppliedProject] = useState([]);
-  const { userId, token, setProfile, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
+  const { userId, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
 
-  console.log(profile)
-
-  const getUserDetails = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, { headers: headers });
-      setProfile(response.data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const getConsumerProjects = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/projects/consumer/${userId}`, { headers: headers });
-      setConsumerProjects(response.data)
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  const appliedJob = async () => {
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URI}/api/v1/projects/applied-projects`, { userId: userId }, { headers: headers });
-      setAppliedProject(response.data)
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  }
-
-  useEffect(() => {
-    getUserDetails();
-    getConsumerProjects();
-    appliedJob();
-  }, [token, userUpdate]);
 
   const initialValues = {
     email: profile?.email,
@@ -93,14 +57,40 @@ export const Profile = () => {
             <h2 className="text-3xl font-bold text-center mb-6">User Profile</h2>
             <FaRegEdit className='cursor-pointer' onClick={() => document.getElementById('my_modal_4').showModal()} />
           </div>
-          <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
-            <p className="text-lg"><strong>Name:</strong> {profile?.profile?.fullName || "No name available"}</p>
-            <p className="text-lg"><strong>Email:</strong> {profile?.email}</p>
-            <p className="text-lg"><strong>Phone:</strong> ${profile?.profile?.phoneNumber || "No address available"}</p>
-            <p className="text-lg"><strong>User Type: </strong> {profile?.role}</p>
-            <p className="text-lg"><strong>Address:</strong> {`${profile?.profile?.address || "No address available"},${profile?.profile?.country || "No country available"}`}</p>
+          <div className="flex items-center justify-between mb-6">
+            <div className="w-2/3">
+              <h3 className="text-xl font-semibold mb-2">Personal Information</h3>
+              <p className="text-lg">
+                <strong>Name:</strong> {profile?.profile?.fullName || "No name available"}
+              </p>
+              <p className="text-lg">
+                <strong>Email:</strong> {profile?.email}
+              </p>
+              <p className="text-lg">
+                <strong>Phone:</strong> {profile?.profile?.phoneNumber || "No phone number available"}
+              </p>
+              <p className="text-lg">
+                <strong>User Type: </strong> {profile?.role}
+              </p>
+              <p className="text-lg">
+                <strong>Address:</strong>{" "}
+                {`${profile?.profile?.address || "No address available"}, ${profile?.profile?.country || "No country available"
+                  }`}
+              </p>
+            </div>
+            <div className="avatar">
+              <div className="w-40 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 mr-7">
+                <img
+                  src={
+                    profile?.profile?.profilePicture ||
+                    "https://via.placeholder.com/150"
+                  }
+                  alt="Profile"
+                />
+              </div>
+            </div>
           </div>
+
 
           <div>
             <h3 className="text-xl font-semibold mb-2">{profile?.userType === "Consumer" ? "Projects" : "Applied Jobs"}</h3>
