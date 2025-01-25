@@ -23,6 +23,7 @@ function App() {
   const [appliedProject, setAppliedProject] = useState([]);
   const { userId, token, setProfile, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
 
+
   const getUserDetails = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, {

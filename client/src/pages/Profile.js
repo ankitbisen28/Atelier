@@ -15,7 +15,6 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
 
-
   const initialValues = {
     email: profile?.email,
     name: profile?.name,
@@ -93,7 +92,7 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
 
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">{profile?.userType === "Consumer" ? "Projects" : "Applied Jobs"}</h3>
+            <h3 className="text-xl font-semibold mb-2">{profile?.role === "Consumer" ? "My Projects" : "Applied Jobs"}</h3>
 
             <div className="container mx-auto mt-8">
               <table className="min-w-full divide-y divide-gray-200">
@@ -117,7 +116,7 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {profile?.userType === "Consumer" ? consumerProjects.map((item) => (
+                  {profile?.role === "Consumer" ? consumerProjects.map((item) => (
                     <tr key={item._id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{item.title}</div>
@@ -135,25 +134,24 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
                         <div className="text-sm text-gray-900 cursor-pointer">Open</div>
                       </td>
                     </tr>
-                  )) : appliedProject.map((item) => (
-                    <tr key={item._id}>
+                  )) :
+                    <tr >
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{item.title}</div>
+                        <div className="text-sm text-gray-900">{appliedProject.title}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{item.status}</div>
+                        <div className="text-sm text-gray-900">{appliedProject.status}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">${item.budget}</div>
+                        <div className="text-sm text-gray-900">${appliedProject.budget}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{item.deadline}</div>
+                        <div className="text-sm text-gray-900">{appliedProject.deadline}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 cursor-pointer">Open</div>
                       </td>
-                    </tr>
-                  ))}
+                    </tr>}
                 </tbody>
               </table>
             </div>

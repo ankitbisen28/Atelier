@@ -184,7 +184,7 @@ router.post('/applied-projects', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        if (user.userType !== 'Maker') {
+        if (user.role !== 'Maker') {
             return res.status(403).json({ message: 'Access denied' });
         }
 
@@ -202,7 +202,7 @@ router.post('/applied-projects', async (req, res) => {
             })
         );
 
-        res.json(projectDetails);
+        res.json(projectDetails[1]);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

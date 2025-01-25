@@ -20,7 +20,7 @@ router.put('/:projectId', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        if (user.userType !== 'Maker') {
+        if (user.role !== 'Maker') {
             return res.status(403).json({ message: 'Only Makers can bid on projects' });
         }
 
