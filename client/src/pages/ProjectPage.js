@@ -13,8 +13,7 @@ const ProjectPage = () => {
   const { id, HeaderTypeTwo } = useParams();
   const { token } = useContext(UserContext);
   const [product, setProduct] = React.useState({});
-  const [consumer, setConsumer] = React.useState({});
-  const { userId } = useAppStore((state) => ({ userId: state.userId }));
+  const { userId, consumer, setConsumer } = useAppStore((state) => ({ userId: state.userId, consumer: state.consumer, setConsumer: state.setConsumer }));
 
   const getProductDetail = async () => {
     try {
@@ -27,8 +26,6 @@ const ProjectPage = () => {
       console.log(error.message);
     }
   };
-
-  console.log(consumer)
 
   const initialValues = {
     maker_id: userId,
