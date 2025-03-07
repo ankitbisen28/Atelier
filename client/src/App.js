@@ -90,7 +90,7 @@ function App() {
                 path="/user/:id"
                 element={
                   <ProtectedRoute>
-                    <Profile consumerProjects={consumerProjects} appliedProject={appliedProject} />
+                    <Profile consumerProjects={consumerProjects} appliedProject={appliedProject} getUserDetails={getUserDetails} />
                   </ProtectedRoute>
                 }
               ></Route>

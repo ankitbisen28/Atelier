@@ -9,22 +9,17 @@ import { countries } from "../utils/countries";
 import { toast } from "react-toastify";
 
 
-export const Profile = ({ consumerProjects, appliedProject }) => {
+export const Profile = ({ consumerProjects, appliedProject, getUserDetails }) => {
   const { headers } = useContext(UserContext);
   const { userId, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
 
   const initialValues = {
-    email: profile?.email,
-    name: profile?.name,
-    phone: profile?.phone,
-    street: profile?.street,
-    apartment: profile?.apartment,
-    zip: profile?.zip,
-    city: profile?.city,
+    firstName: profile?.name,
+    address: profile?.address,
+    phoneNumber: profile?.phone,
     country: profile?.country,
-    userType: profile?.userType
   };
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -46,6 +41,10 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
         }
       },
     });
+
+  useEffect(() => {
+    getUserDetails();
+  }, [userUpdate])
 
 
   return (
@@ -168,99 +167,43 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
                 <div>
                   <input
                     type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={values.name}
+                    name="fullName"
+                    placeholder="Full Name"
+                    value={values.fullName}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
-                  {touched.name && errors.name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  {touched.email && errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  {touched.fullName && errors.fullName && (
+                    <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
                   )}
                 </div>
                 <div>
                   <input
                     type="text"
-                    name="phone"
+                    name="phoneNumber"
                     placeholder="Phone"
-                    value={values.phone}
+                    value={values.phoneNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
-                  {touched.phone && errors.phone && (
-                    <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                  {touched.phoneNumber && errors.phoneNumber && (
+                    <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
                   )}
                 </div>
                 <div>
                   <input
                     type="text"
-                    name="street"
-                    placeholder="Street"
-                    value={values.street}
+                    name="address"
+                    placeholder="Address"
+                    value={values.address}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full p-2 border border-gray-300 rounded"
                   />
-                  {touched.street && errors.street && (
-                    <p className="text-red-500 text-sm mt-1">{errors.street}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="apartment"
-                    placeholder="Apartment"
-                    value={values.apartment}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  {touched.apartment && errors.apartment && (
-                    <p className="text-red-500 text-sm mt-1">{errors.apartment}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="zip"
-                    placeholder="ZIP"
-                    value={values.zip}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  {touched.zip && errors.zip && (
-                    <p className="text-red-500 text-sm mt-1">{errors.zip}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    value={values.city}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  {touched.city && errors.city && (
-                    <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+                  {touched.address && errors.address && (
+                    <p className="text-red-500 text-sm mt-1">{errors.address}</p>
                   )}
                 </div>
                 <div>
@@ -282,24 +225,14 @@ export const Profile = ({ consumerProjects, appliedProject }) => {
                     <p className="text-red-500 text-sm mt-1">{errors.country}</p>
                   )}
                 </div>
-                <div>
-                  <div className='flex flex-row items-center'>
-                    <p className='m-3'>Consumer</p>
-                    <input type="radio" name="userType" value='Consumer' onChange={handleChange} className="radio radio-primary" />
-                    <p className='m-3'>Maker</p>
-                    <input type="radio" name="userType" value='Maker' onChange={handleChange} className="radio radio-primary" />
-                  </div>
-                  {touched.userType && errors.userType && (
-                    <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
-                  )}
-                </div>
               </div>
               <button
                 type="submit"
-                className="w-full p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700"
+                className="m-2 p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700"
               >
                 Update
               </button>
+              <button onClick={() => modalRef.current.close()} className="m-2 p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700">Close</button>
             </form>
           </div>
         </div>
