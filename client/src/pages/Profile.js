@@ -1,46 +1,59 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import UserContext from '../Context/UserContext';
 import { useAppStore } from '../utils/store';
 import { FaRegEdit } from "react-icons/fa";
 import { editSchema } from "../Schema";
-import { useFormik } from "formik";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { countries } from "../utils/countries";
 import { toast } from "react-toastify";
 
 
 export const Profile = ({ consumerProjects, appliedProject, getUserDetails }) => {
-  const { headers } = useContext(UserContext);
-  const { userId, profile } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
+  const { userId, profile, token } = useAppStore((state) => ({ userId: state.userId, token: state.token, setProfile: state.setProfile, profile: state.profile }));
   const [userUpdate, setUserUpdate] = useState(false);
   const modalRef = useRef(null);
 
-  const initialValues = {
-    firstName: profile?.name,
-    address: profile?.address,
-    phoneNumber: profile?.phone,
-    country: profile?.country,
-  };
+  const [formData, setFormData] = useState({
+    fullName: profile?.profile?.fullName || "",
+    address: profile?.profile?.address || "",
+    phoneNumber: profile?.profile?.phoneNumber || "",
+    country: profile?.profile?.country || "",
+    profilePicture: null,
+  });
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: initialValues,
-      enableReinitialize: true,
-      validationSchema: editSchema,
-      onSubmit: async (values, action) => {
-        try {
-          await axios.put(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, values, { headers });
-          action.resetForm();
-          toast.success("User Details Update Sucessfully")
-          setUserUpdate(!userUpdate)
-          if (modalRef.current) { // Close the modal
-            modalRef.current.close();
-          }
-        } catch (error) {
-          toast.error(`Update Failed: ${error.response.data}`);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: formData,
+    resolver: yupResolver(editSchema),
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append('fullName', data.fullName);
+      formDataObj.append('address', data.address);
+      formDataObj.append('phoneNumber', data.phoneNumber);
+      formDataObj.append('country', data.country);
+      if (data.profilePicture) {
+        formDataObj.append('profilePicture', data.profilePicture[0]);
+      }
+      await axios.put(`${import.meta.env.VITE_API_URI}/api/v1/users/${userId}`, formDataObj, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + token
         }
-      },
-    });
+      });
+      toast.success("User Detail Updated");
+      setUserUpdate(!userUpdate);
+    } catch (error) {
+      toast.error(`Update failed: ${error.response}`);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     getUserDetails();
@@ -162,56 +175,40 @@ export const Profile = ({ consumerProjects, appliedProject, getUserDetails }) =>
         <div className="modal-box w-6/12 max-w-5xl">
           <h3 className="font-bold text-2xl text-center">Edit Your Profile</h3>
           <div className="modal-action">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="mb-4">
+                  <label className="block text-gray-600 mb-1">Full Name</label>
                   <input
-                    type="text"
-                    name="fullName"
+                    {...register("fullName")}
+                    className="border rounded p-2 w-full"
                     placeholder="Full Name"
-                    value={values.fullName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
                   />
-                  {touched.fullName && errors.fullName && (
-                    <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
+                  {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-gray-600 mb-1">Phone Number</label>
+                  <input
+                    {...register("phoneNumber")}
+                    className="border rounded p-2 w-full"
+                    placeholder="Phone Number"
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
                   )}
                 </div>
-                <div>
+                <div className="mb-4">
+                  <label className="block text-gray-600 mb-1">Profile Picture</label>
                   <input
-                    type="text"
-                    name="phoneNumber"
-                    placeholder="Phone"
-                    value={values.phoneNumber}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
+                    {...register("profilePicture")}
+                    type="file"
+                    className="border rounded p-2 w-full"
                   />
-                  {touched.phoneNumber && errors.phoneNumber && (
-                    <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    value={values.address}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                  {touched.address && errors.address && (
-                    <p className="text-red-500 text-sm mt-1">{errors.address}</p>
-                  )}
                 </div>
                 <div>
                   <select
-                    name="country"
-                    value={values.country}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    {...register("country")}
                     className="w-full p-2 border border-gray-300 rounded"
                   >
                     <option value="" label="Country" />
@@ -221,8 +218,8 @@ export const Profile = ({ consumerProjects, appliedProject, getUserDetails }) =>
                       </option>
                     ))}
                   </select>
-                  {touched.country && errors.country && (
-                    <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+                  {errors.country && (
+                    <p className="text-red-500 text-sm">{errors.country.message}</p>
                   )}
                 </div>
               </div>
@@ -232,7 +229,7 @@ export const Profile = ({ consumerProjects, appliedProject, getUserDetails }) =>
               >
                 Update
               </button>
-              <button onClick={() => modalRef.current.close()} className="m-2 p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700">Close</button>
+              <button type='button' onClick={() => modalRef.current.close()} className="m-2 p-2 bg-blue-600 text-white rounded mt-4 hover:bg-blue-700">Close</button>
             </form>
           </div>
         </div>
