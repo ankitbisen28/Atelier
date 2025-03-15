@@ -28,6 +28,7 @@ export const Login = () => {
           setToken(response.data.token);
           setUserId(response.data.user)
           toast.success(`Logged in`);
+          navigate('/');
         } catch (error) {
           toast.error(`Login failed: ${error.response.data}`);
         }
